@@ -14,6 +14,6 @@ abstract class Objeto {
     private int dano;
     private int espacio[];
     
-    public abstract String morir();
+    public abstract void morir();
     public abstract void recibidDano(int cantidadDano, Entidad atacante);
 }
