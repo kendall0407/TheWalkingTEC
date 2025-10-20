@@ -10,11 +10,11 @@ package com.mycompany.walkingtec;
  */
 public class Reliquia extends Objeto {
     @Override
-    public String morir(){
-    return ;
+    public void morir(){
+    return;
 }
     @Override
-    public void recibidDano(int cantidadDano, Entidad atacante){
+    public void recibirDano(int cantidadDano, Entidad atacante){
         
     }
 }

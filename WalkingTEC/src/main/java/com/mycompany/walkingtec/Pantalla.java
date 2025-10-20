@@ -28,32 +28,85 @@ public class Pantalla extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
+        panelFuerte = new javax.swing.JPanel();
+        labelReliquia = new javax.swing.JLabel();
+        panelControl = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        reliquiaUbicacion = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/mycompany/walkingtec/images.jpg"))); // NOI18N
-        jLabel1.setText("jLabel1");
+        panelFuerte.setBackground(new java.awt.Color(204, 255, 204));
+        panelFuerte.setPreferredSize(new java.awt.Dimension(25, 25));
+
+        labelReliquia.setBackground(new java.awt.Color(102, 102, 255));
+        labelReliquia.setOpaque(true);
+        labelReliquia.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                labelReliquiaMouseClicked(evt);
+            }
+        });
+
+        javax.swing.GroupLayout panelFuerteLayout = new javax.swing.GroupLayout(panelFuerte);
+        panelFuerte.setLayout(panelFuerteLayout);
+        panelFuerteLayout.setHorizontalGroup(
+            panelFuerteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelFuerteLayout.createSequentialGroup()
+                .addGap(314, 314, 314)
+                .addComponent(labelReliquia, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(464, Short.MAX_VALUE))
+        );
+        panelFuerteLayout.setVerticalGroup(
+            panelFuerteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelFuerteLayout.createSequentialGroup()
+                .addGap(277, 277, 277)
+                .addComponent(labelReliquia, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(415, Short.MAX_VALUE))
+        );
+
+        panelControl.setBackground(new java.awt.Color(255, 153, 153));
+
+        reliquiaUbicacion.setColumns(20);
+        reliquiaUbicacion.setRows(5);
+        jScrollPane1.setViewportView(reliquiaUbicacion);
+
+        javax.swing.GroupLayout panelControlLayout = new javax.swing.GroupLayout(panelControl);
+        panelControl.setLayout(panelControlLayout);
+        panelControlLayout.setHorizontalGroup(
+            panelControlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 220, Short.MAX_VALUE)
+        );
+        panelControlLayout.setVerticalGroup(
+            panelControlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelControlLayout.createSequentialGroup()
+                .addGap(191, 191, 191)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(73, 73, 73)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(142, Short.MAX_VALUE))
+                .addComponent(panelFuerte, javax.swing.GroupLayout.DEFAULT_SIZE, 836, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(panelControl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(26, Short.MAX_VALUE)
-                .addComponent(jLabel1)
-                .addGap(19, 19, 19))
+            .addComponent(panelControl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(panelFuerte, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 750, Short.MAX_VALUE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void labelReliquiaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_labelReliquiaMouseClicked
+        int x = labelReliquia.getLocation().x;
+        int y = labelReliquia.getLocation().y;
+        reliquiaUbicacion.setText("Reliquia: "+x+", "+y);
+    }//GEN-LAST:event_labelReliquiaMouseClicked
 
     /**
      * @param args the command line arguments
@@ -81,6 +134,10 @@ public class Pantalla extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel jLabel1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel labelReliquia;
+    private javax.swing.JPanel panelControl;
+    private javax.swing.JPanel panelFuerte;
+    private javax.swing.JTextArea reliquiaUbicacion;
     // End of variables declaration//GEN-END:variables
 }
