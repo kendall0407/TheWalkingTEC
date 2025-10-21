@@ -7,6 +7,7 @@ package com.mycompany.walkingtec;
 import java.awt.Dimension;
 import java.awt.Image;
 import javax.swing.ImageIcon;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 
@@ -25,8 +26,23 @@ public class Pantalla extends javax.swing.JFrame {
      * Creates new form Pantalla
      */
     public Pantalla() {
-        initComponents();
+        JFrame frame = new JFrame("JLabel con Imagen");
+        frame.setSize(400, 300);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setLayout(null);
 
+        // Cargar imagen
+        ImageIcon icon = new ImageIcon("/imagenes/Calavera.png");
+
+        // Crear JLabel con imagen
+        JLabel label = new JLabel(icon);
+        label.setBounds(50, 50, icon.getIconWidth(), icon.getIconHeight());
+
+        // Agregar al frame
+        frame.add(label);
+        frame.setVisible(true);
+        initComponents();
+        
         // Opcional: establecer tamaño preferido para el label
         lblEjemplo.setPreferredSize(new Dimension(150,150));
 

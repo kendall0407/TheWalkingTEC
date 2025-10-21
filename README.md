@@ -1,2 +1,0 @@
-# TheWalkingTEC
-Progra I - POO
