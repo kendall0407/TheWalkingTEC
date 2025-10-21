@@ -4,21 +4,69 @@
  */
 package com.mycompany.walkingtec;
 
+import java.awt.Dimension;
+import java.awt.Image;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.SwingUtilities;
+
 /**
  *
  * @author josed
  */
 public class Pantalla extends javax.swing.JFrame {
-    
+    public static final int SCALE_DEFAULT = 80;
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Pantalla.class.getName());
-
+    private ImageIcon image;
+    private ImageIcon icon;
+    int ancho = 100;
+    int alto = 100;
     /**
      * Creates new form Pantalla
      */
     public Pantalla() {
         initComponents();
-    }
 
+        // Opcional: establecer tamaño preferido para el label
+        lblEjemplo.setPreferredSize(new Dimension(150,150));
+
+        // Insertar la imagen
+        insertarImg(lblEjemplo, "D:\\PrograPOO\\TheWalkingTEC\\WalkingTEC\\imagenes\\Calavera.png");
+    }
+    private void insertarImg(JLabel lbl, String ruta) {
+        // Cargar la imagen
+        ImageIcon image = new ImageIcon(ruta);
+
+        // Forzar la ejecución después de que el JLabel tenga tamaño válido
+        SwingUtilities.invokeLater(() -> {
+            // Tomar el tamaño real del JLabel
+            int ancho = lbl.getWidth();
+            int alto = lbl.getHeight();
+
+            // Si el tamaño aún es 0, usar un valor por defecto
+            if (ancho <= 0) ancho = 150;
+            if (alto <= 0) alto = 150;
+
+            // Escalar la imagen al tamaño del JLabel
+            Image imgEscalada = image.getImage().getScaledInstance(ancho, alto, Image.SCALE_SMOOTH);
+
+            // Crear un nuevo ImageIcon con la imagen escalada
+            ImageIcon icon = new ImageIcon(imgEscalada);
+
+            // Asignar el icon al JLabel
+            lbl.setIcon(icon);
+
+            // Asegurarse de que la imagen se centre
+            lbl.setHorizontalAlignment(JLabel.CENTER);
+            lbl.setVerticalAlignment(JLabel.CENTER);
+
+            // Borrar cualquier texto previo
+            lbl.setText("");
+
+            // Repaint para actualizar la vista
+            lbl.repaint();
+        });
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -30,6 +78,7 @@ public class Pantalla extends javax.swing.JFrame {
 
         panelFuerte = new javax.swing.JPanel();
         labelReliquia = new javax.swing.JLabel();
+        lblEjemplo = new javax.swing.JLabel();
         panelControl = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         reliquiaUbicacion = new javax.swing.JTextArea();
@@ -52,16 +101,23 @@ public class Pantalla extends javax.swing.JFrame {
         panelFuerteLayout.setHorizontalGroup(
             panelFuerteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelFuerteLayout.createSequentialGroup()
-                .addGap(314, 314, 314)
-                .addComponent(labelReliquia, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(464, Short.MAX_VALUE))
+                .addGroup(panelFuerteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelFuerteLayout.createSequentialGroup()
+                        .addGap(24, 24, 24)
+                        .addComponent(labelReliquia, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(panelFuerteLayout.createSequentialGroup()
+                        .addGap(34, 34, 34)
+                        .addComponent(lblEjemplo, javax.swing.GroupLayout.PREFERRED_SIZE, 757, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(45, Short.MAX_VALUE))
         );
         panelFuerteLayout.setVerticalGroup(
             panelFuerteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelFuerteLayout.createSequentialGroup()
-                .addGap(277, 277, 277)
+                .addGap(14, 14, 14)
                 .addComponent(labelReliquia, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(415, Short.MAX_VALUE))
+                .addGap(58, 58, 58)
+                .addComponent(lblEjemplo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(24, 24, 24))
         );
 
         panelControl.setBackground(new java.awt.Color(255, 153, 153));
@@ -81,7 +137,7 @@ public class Pantalla extends javax.swing.JFrame {
             .addGroup(panelControlLayout.createSequentialGroup()
                 .addGap(191, 191, 191)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(453, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -131,11 +187,13 @@ public class Pantalla extends javax.swing.JFrame {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> new Pantalla().setVisible(true));
+        
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel labelReliquia;
+    private javax.swing.JLabel lblEjemplo;
     private javax.swing.JPanel panelControl;
     private javax.swing.JPanel panelFuerte;
     private javax.swing.JTextArea reliquiaUbicacion;
