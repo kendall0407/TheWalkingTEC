@@ -8,12 +8,13 @@ package com.mycompany.walkingtec;
  *
  * @author josed
  */
-abstract class Objeto {
+abstract class Estructura {
     private String nombre;
     private int vida;
     private int dano;
     private int espacio[];
     
     public abstract void morir();
-    public abstract void recibirDano(int cantidadDano, Entidad atacante);
+    public abstract void recibirDano(int cantidadDano, Zombie atacante);
 }
+

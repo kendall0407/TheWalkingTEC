@@ -8,6 +8,6 @@ package com.mycompany.walkingtec;
  *
  * @author josed
  */
-public class Entidad {
+abstract class Zombie {
     
 }

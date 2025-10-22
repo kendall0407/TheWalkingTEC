@@ -8,13 +8,13 @@ package com.mycompany.walkingtec;
  *
  * @author josed
  */
-public class Reliquia extends Objeto {
+public class Reliquia extends Estructura {
     @Override
     public void morir(){
     return;
 }
     @Override
-    public void recibirDano(int cantidadDano, Entidad atacante){
+    public void recibirDano(int cantidadDano, Zombie atacante){
         
     }
 }
