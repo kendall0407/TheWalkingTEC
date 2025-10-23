@@ -4,17 +4,42 @@
  */
 package com.mycompany.walkingtec;
 
+import javax.swing.*;
+
 /**
  *
  * @author josed
  */
 public class Reliquia extends Estructura {
+
+    private JLabel refLabel;
+    private Pantalla refPantalla;
+
+    public Reliquia(JLabel refLabel) {
+        this.refLabel = refLabel;
+    }
+    
+    
     @Override
     public void morir(){
-    return;
-}
-    @Override
-    public void recibirDano(int cantidadDano, Zombie atacante){
         
+    }
+    
+    
+    @Override
+    public int recibirDano(int cantidadDano, Zombie atacante){
+        int vida = this.getVida();
+        if (vida <= 0) return -1;
+
+        vida -= cantidadDano;
+        this.refLabel.setText(vida+"");
+        
+        if (vida <= 0){
+            //refPantalla.deternerJuego();
+            morir();
+        }
+            
+        return vida;
+    
     }
 }

@@ -18,6 +18,7 @@ public class Celda extends javax.swing.JPanel {
     public Celda() {
         initComponents();
         this.ocupada = false;
+        setLayout(new BorderLayout());
         setBackground(Color.GREEN);
         setBorder(javax.swing.BorderFactory.createLineBorder(Color.BLACK));
     }
@@ -36,11 +37,28 @@ public class Celda extends javax.swing.JPanel {
         setBackground(Color.GREEN);
     }
     
-    public void setEstructura(JLabel estructura){
+    public void setColorEstructura(){
         removeAll();
-        add(estructura);
         setBackground(new Color(230,220,150));
         ocupada = true;
+        revalidate();
+        repaint();
+    }
+    
+    public void setImgEstructura(JLabel estructura){
+        removeAll();
+        setBackground(new Color(230,220,150));
+        ocupada = true;        
+        add(estructura, BorderLayout.CENTER); // agrega centrado
+        revalidate();
+        repaint();
+    }
+    
+    
+    public void agregarEntidad(JLabel entidad){
+        removeAll();
+        ocupada = true;
+        add(entidad);
         revalidate();
         repaint();
     }

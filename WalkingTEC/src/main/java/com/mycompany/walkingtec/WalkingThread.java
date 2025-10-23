@@ -11,7 +11,7 @@ package com.mycompany.walkingtec;
 public class WalkingThread extends Thread {
     private boolean isRunning = true;
     private boolean isPause = false;
-    private Pantalla refPantalla;
+    Pantalla refPantalla;
     
     public WalkingThread(Pantalla refPantalla){
         this.refPantalla = refPantalla;

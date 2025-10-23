@@ -4,10 +4,44 @@
  */
 package com.mycompany.walkingtec;
 
+import javax.swing.*;
+
 /**
  *
  * @author josed
  */
-abstract class Zombie {
+public class Zombie extends Estructura {
+    private JLabel refLabel;
+
+
+    public Zombie(JLabel refLabel) {
+        this.refLabel = refLabel;
+    }
+    
+    
+    
+    @Override
+    public void morir(){
+        
+    }
+    
+    
+    @Override
+    public int recibirDano(int cantidadDano, Zombie atacante){
+        int vida = this.getVida();
+        if (vida <= 0) return -1;
+
+        vida -= cantidadDano;
+        this.refLabel.setText(vida+"");
+        
+        if (vida <= 0){
+            //refPantalla.deternerJuego();
+            morir();
+        }
+            
+        return vida;
+    
+    }
+    
     
 }
