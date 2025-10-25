@@ -28,7 +28,7 @@ public class CampoBatalla extends javax.swing.JPanel {
         setLayout(new GridLayout(filas,columnas));
         inicializarCeldas();
         
-        this.reliquia =colocarReliquia();
+        this.reliquia = colocarReliquia();
         
     }
 

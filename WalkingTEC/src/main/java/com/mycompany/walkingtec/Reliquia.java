@@ -13,12 +13,11 @@ import javax.swing.*;
 public class Reliquia extends Estructura {
 
     private JLabel refLabel;
-    private Pantalla refPantalla;
+    private int vida = 1000;
 
     public Reliquia(JLabel refLabel) {
         this.refLabel = refLabel;
     }
-    
     
     @Override
     public void morir(){

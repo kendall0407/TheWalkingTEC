@@ -10,6 +10,7 @@ package com.mycompany.walkingtec;
  * @author josed
  */
 public class Pantalla extends javax.swing.JFrame {
+    private Reliquia reliquia;
     
     
     public Pantalla() {
