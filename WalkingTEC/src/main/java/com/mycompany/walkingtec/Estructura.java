@@ -14,7 +14,10 @@ public abstract class Estructura {
     private String nombre;
     private int vida;
     private int dano;
-    private int espacio[];
+    private int espacio;
+    private int nivelAparicion; //nivel de aparicion
+    private String direccion; //apariencia
+    private int nivel; //nivel, entrre mas nivel mas vida y ataque
     private JLabel refLabel;
     private Pantalla refPantalla;
 
@@ -36,7 +39,7 @@ public abstract class Estructura {
         return dano;
     }
 
-    public int[] getEspacio() {
+    public int getEspacio() {
         return espacio;
     }
 
@@ -46,7 +49,7 @@ public abstract class Estructura {
     }
 
 
-    public void setEspacio(int[] espacio) {
+    public void setEspacio(int espacio) {
         this.espacio = espacio;
     }
     

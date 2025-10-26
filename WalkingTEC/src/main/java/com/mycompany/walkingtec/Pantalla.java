@@ -5,13 +5,18 @@
 
 package com.mycompany.walkingtec;
 
+import java.awt.*;
+import javax.swing.SwingUtilities;
+
+
 /**
  *
  * @author josed
  */
 public class Pantalla extends javax.swing.JFrame {
     private Reliquia reliquia;
-    
+    private CampoBatalla campo;
+    private int nivel = 1;
     
     public Pantalla() {
         initComponents();
@@ -19,13 +24,24 @@ public class Pantalla extends javax.swing.JFrame {
     }
     
     private void inicializar() {
+        setLayout(new BorderLayout());
+        
         CampoBatalla campo = new CampoBatalla(this);
         setContentPane(campo);
+        this.campo = campo;
         pack();
         setLocationRelativeTo(null);
-        campo.generarZombies(1);
-    }
 
+        //while {  condiciones para que el mae reinicie o avance, continua
+        campo.jugar(nivel);
+        nivel++;
+        
+        //}
+    }
+   
+    
+
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
