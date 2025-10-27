@@ -12,7 +12,7 @@ import javax.swing.JLabel;
  */
 public class ZombieAlcance extends Zombie{
     
-    public ZombieAlcance(JLabel refLabel, Pantalla refPantalla, int vida, int dano, int velocidad, int posX, int posY, String nombre, String dirrecion) {
+    public ZombieAlcance(JLabel refLabel, PantallaJuego refPantalla, int vida, int dano, int velocidad, int posX, int posY, String nombre, String dirrecion) {
         super(refLabel, refPantalla, vida, dano, velocidad, posX, posY, nombre, dirrecion);
     }
     

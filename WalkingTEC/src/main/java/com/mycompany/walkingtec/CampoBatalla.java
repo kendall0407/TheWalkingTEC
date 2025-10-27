@@ -19,12 +19,12 @@ public class CampoBatalla extends javax.swing.JPanel {
     private Celda[][] celdas = new Celda[filas][columnas];
     private Reliquia reliquia;
     private ArrayList<Zombie> infectados = new ArrayList<Zombie>();
-    private Pantalla refPantalla;
+    private PantallaJuego refPantalla;
     
     private Configuracion configPanel;
     
     private JPanel tablero;
-    public CampoBatalla(Pantalla refPantalla) {
+    public CampoBatalla(PantallaJuego refPantalla) {
         this.refPantalla = refPantalla;
 
        // Inicializar subpanel Configuración

@@ -14,7 +14,7 @@ public abstract class Zombie extends Thread {
     private JLabel refLabel;
     private boolean isRunning = true;
     private boolean isPause = true;
-    private Pantalla refPantalla;
+    private PantallaJuego refPantalla;
     
     private int vida;
     private int dano;
@@ -27,7 +27,7 @@ public abstract class Zombie extends Thread {
     private int espacio;  //cuanto espacio ocupan
     private int nivel = 1;  //nivel, conforme pasan los niveles se aumenta la vida y el dano
 
-    public Zombie(JLabel refLabel, Pantalla refPantalla, int vida, int dano, int velocidad, int posX, int posY, String nombre, String dirrecion) {
+    public Zombie(JLabel refLabel, PantallaJuego refPantalla, int vida, int dano, int velocidad, int posX, int posY, String nombre, String dirrecion) {
         this.refLabel = refLabel;
         this.refPantalla = refPantalla;
         this.vida = vida;
