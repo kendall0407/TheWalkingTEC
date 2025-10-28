@@ -23,6 +23,23 @@ public class PantallaJuego extends javax.swing.JFrame {
         this.nivel = nivelActual;
         inicializar();
     }
+    
+    public Reliquia getReliquia() {
+        return this.reliquia;
+    }
+
+    public int getNivel() {
+        return nivel;
+    }
+    
+    
+    public Point getReliquiaLocation() {
+        return new Point(this.reliquia.getX(), this.reliquia.getY());
+    }
+    
+    public void moverZombie (JLabel refLabel, int x, int y, int xAntiguo, int yAntiguo){
+        this.campo.moverZombie(refLabel, x, y, xAntiguo, yAntiguo);
+    }
      
     private void inicializar() {
         setLayout(new BorderLayout());
@@ -32,12 +49,7 @@ public class PantallaJuego extends javax.swing.JFrame {
         this.campo = campo;
         pack();
         setLocationRelativeTo(null);
-
-        //while {  condiciones para que el mae reinicie o avance, continua
-        campo.jugar(nivel);
-        nivel++;
-        
-        //}
+        this.reliquia = campo.getReliquia();
     }
     
     public void guardarPartida(){
@@ -61,6 +73,7 @@ public class PantallaJuego extends javax.swing.JFrame {
         guardarPartida();
         
     }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always

@@ -10,31 +10,51 @@ import javax.swing.*;
  *
  * @author josed
  */
-public class Reliquia extends Estructura {
-
+public class Reliquia {
+    private CampoBatalla refPantalla;
     private JLabel refLabel;
     private int vida = 1000;
-
-    public Reliquia(JLabel refLabel) {
+    private int x;
+    private int y;
+    
+    public Reliquia(JLabel refLabel, CampoBatalla refPantalla) {
         this.refLabel = refLabel;
+        this.refPantalla = refPantalla;
     }
     
-    @Override
+
     public void morir(){
         
     }
+
+    public JLabel getRefLabel() {
+        return refLabel;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
     
-    
-    @Override
     public int recibirDano(int cantidadDano, Zombie atacante){
-        int vida = this.getVida();
         if (vida <= 0) return -1;
 
         vida -= cantidadDano;
         this.refLabel.setText(vida+"");
         
         if (vida <= 0){
-            //refPantalla.deternerJuego();
+            refPantalla.detenerJuego();
             morir();
         }
             

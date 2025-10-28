@@ -14,10 +14,11 @@ import javax.swing.*;
 public class Celda extends javax.swing.JPanel {
 
     private boolean ocupada;
-    
+    private boolean construible;
     public Celda() {
         initComponents();
         this.ocupada = false;
+        this.construible = false;
         setLayout(new BorderLayout());
         setBackground(Color.GREEN);
         setBorder(javax.swing.BorderFactory.createLineBorder(Color.BLACK));
@@ -40,7 +41,7 @@ public class Celda extends javax.swing.JPanel {
     public void setColorEstructura(){
         removeAll();
         setBackground(new Color(230,220,150));
-        ocupada = true;
+        construible = true;
         revalidate();
         repaint();
     }
@@ -54,7 +55,9 @@ public class Celda extends javax.swing.JPanel {
         repaint();
     }
     
-    
+    public boolean esConstruible() {
+        return construible;
+    }
     public void agregarEntidad(JLabel entidad){
         removeAll();
         ocupada = true;

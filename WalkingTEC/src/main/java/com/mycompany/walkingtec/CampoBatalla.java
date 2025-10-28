@@ -6,6 +6,7 @@ package com.mycompany.walkingtec;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Random;
 import javax.swing.*;
 /**
@@ -41,6 +42,25 @@ public class CampoBatalla extends javax.swing.JPanel {
         this.reliquia = colocarReliquia();
     }
 
+    public PantallaJuego getRefPantalla() {
+        return refPantalla;
+    }
+    
+    
+    public Reliquia getReliquia() {
+        return reliquia;
+    }
+    
+    public void moverZombie(JLabel lblMover, int x, int y, int xAntiguo, int yAntiguo) {
+
+        celdas[xAntiguo][yAntiguo].removeAll();
+        celdas[xAntiguo][yAntiguo].revalidate();
+        celdas[xAntiguo][yAntiguo].repaint();
+        celdas[x][y].add(lblMover);
+        celdas[x][y].revalidate();
+        celdas[x][y].repaint();
+    }
+    
     private void inicializarCeldas(JPanel tablero){
         for (int i = 0; i < filas; i++) {
             for (int j = 0; j < columnas; j++) {
@@ -50,28 +70,32 @@ public class CampoBatalla extends javax.swing.JPanel {
         }
     }
 
-    // Método para colocar tropas desde Configuración
-    public void colocarTropa(Point p, JLabel lblPoner) {
-        // Convertimos punto global a panel central (tablero)
+    //metodo para colocar tropas desde el pnl de configuracion
+    public boolean colocarTropa(Point p, JLabel lblPoner) {
+
         Point tableroP = SwingUtilities.convertPoint(configPanel, p, tablero);
-        System.out.println(tableroP.x + "\n");
-        System.out.println(tableroP.y + "\n");
         int celdaX = tableroP.x / 32;
         int celdaY = tableroP.y / 32;
 
         if (celdaX >= 0 && celdaY >= 0 && celdaX < columnas && celdaY < filas) {
-            crearTropaEnCelda(celdaX, celdaY, lblPoner);
-            repaint();
+            if (celdas[celdaX][celdaY].esConstruible() && !celdas[celdaX][celdaY].estaOcupada()) {
+                crearTropaEnCelda(celdaX, celdaY, lblPoner);
+                repaint();
+                return true;
+            } else {
+                System.out.println("No se puede construir ahi!!");
+                return false;
+            }
+            
         } else {
-            //TODO: Falta como manejar el error de que lo ponga afuera entonces que lo borre
             System.out.println("Error, fuera del campo");
+            return false;
         }
     }
 
     private void crearTropaEnCelda(int y, int x, JLabel lblPoner) {
-        System.out.println("Tropa agregada en: " + x + ", " + y);
         celdas[x][y].agregarEntidad(lblPoner);
-        // Aquí tu lógica de matriz o JLabel con imagen
+        celdas[x][y].ocupar();
     }
 
     private Reliquia colocarReliquia(){
@@ -82,7 +106,10 @@ public class CampoBatalla extends javax.swing.JPanel {
         ImageIcon icono = new ImageIcon(getClass().getResource("/images/Reliquia.png"));
         Image imagen = icono.getImage().getScaledInstance(40,40,Image.SCALE_SMOOTH);
         JLabel lblReliquia = new JLabel(new ImageIcon(imagen)); 
-        Reliquia reliquia = new Reliquia(lblReliquia);
+        Reliquia reliquia = new Reliquia(lblReliquia, this);
+        reliquia.setX(centroFila);
+        reliquia.setY(centroColumna);
+        
         
         celdas[centroFila][centroColumna].setLayout(new BorderLayout());
         celdas[centroFila][centroColumna].setImgEstructura(lblReliquia);
@@ -123,7 +150,7 @@ public class CampoBatalla extends javax.swing.JPanel {
             celdas[fila][columna].agregarEntidad(lblZombie);
             celdas[fila][columna].ocupar();
 
-            infectados.add(new ZombieTerrestre(lblZombie, refPantalla, 50, 4, 5, fila, columna, "Terrestre", "/images/Zombies.png"));
+            infectados.add(new ZombieTerrestre(lblZombie, refPantalla, 50, 4, 2000, fila, columna, "Terrestre", "/images/Zombies.png"));
         }
     }
     
@@ -153,7 +180,7 @@ public class CampoBatalla extends javax.swing.JPanel {
             celdas[fila][columna].agregarEntidad(lblZombie);
             celdas[fila][columna].ocupar();
 
-            infectados.add(new ZombieVolador(lblZombie, refPantalla, 30, 10, 10, fila, columna, "Volador", "/images/ZombieVolador.png"));
+            infectados.add(new ZombieVolador(lblZombie, refPantalla, 30, 10, 2000, fila, columna, "Volador", "/images/ZombieVolador.png"));
         }
     }
      public void generarZombiesAlcance(int nivel) {
@@ -182,7 +209,7 @@ public class CampoBatalla extends javax.swing.JPanel {
             celdas[fila][columna].agregarEntidad(lblZombie);
             celdas[fila][columna].ocupar();
 
-            infectados.add(new ZombieAlcance(lblZombie, refPantalla, 30, 12, 4, fila, columna, "Tanque", "/images/ZombieAlcance.png"));
+            infectados.add(new ZombieAlcance(lblZombie, refPantalla, 30, 12, 2000, fila, columna, "Tanque", "/images/ZombieAlcance.png"));
         }
    
     }
@@ -213,7 +240,7 @@ public class CampoBatalla extends javax.swing.JPanel {
             celdas[fila][columna].agregarEntidad(lblZombie);
             celdas[fila][columna].ocupar();
 
-            infectados.add(new ZombieTanque(lblZombie, refPantalla, 200, 8, 2, fila, columna, "Tanque", "/images/ZombieTanque.png"));
+            infectados.add(new ZombieTanque(lblZombie, refPantalla, 200, 8, 2000, fila, columna, "Tanque", "/images/ZombieTanque.png"));
             }
 
         
@@ -230,13 +257,19 @@ public class CampoBatalla extends javax.swing.JPanel {
     }
     
     public void aumentarEstadisticas() {
-        //la idea de este metodo es que desde la clase que llama a jugar, termina el nive,
-        //y se aumenten estadisticas si es que se gano, tanto de defensas como de zombie
-        //con sets de cada clase
+        //se recorren los zombies
+        for (Zombie zombie : infectados) {
+            int nuevoDano = (int)(zombie.getDano() * 1.10);
+            zombie.setDano(nuevoDano);
+            int nuevaVida = (int)(zombie.getVida() * 1.10);
+            zombie.setVida(nuevaVida);
+        }
+        
     }
     
     public int jugar(int nivel){
         //se agregan los zombies que se deseen
+        System.out.println(nivel + "\n");
         switch (nivel){
             case 1:
                 generarZombiesTerrestres(nivel);
@@ -264,13 +297,30 @@ public class CampoBatalla extends javax.swing.JPanel {
                 break;
         }
         
-        //hacer que se muevan
-        //ataquen
+        for (int i = 0; i < infectados.size(); i++) {
+            infectados.get(i).start();
+        }
+
         //maten o mueran
-        
+        refPantalla.avanzarNivel();
+        aumentarEstadisticas();
         return 1; //si gano, 2 si perdio pero falta agregarle esas condiciones 
     }
     
+    public void detenerJuego() {
+        for (int i = 0; i < infectados.size(); i++) {
+            infectados.get(i).setStop();
+        }
+        
+        //falta parar estructuras 
+        JOptionPane.showMessageDialog(
+            null,
+            "Perdiste, los zombies destruyeron la reliquia de la vida",
+            "Game Over",
+            JOptionPane.ERROR_MESSAGE
+        );
+
+    }
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {

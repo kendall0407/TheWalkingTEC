@@ -14,6 +14,12 @@ public class ZombieAlcance extends Zombie{
     
     public ZombieAlcance(JLabel refLabel, PantallaJuego refPantalla, int vida, int dano, int velocidad, int posX, int posY, String nombre, String dirrecion) {
         super(refLabel, refPantalla, vida, dano, velocidad, posX, posY, nombre, dirrecion);
+        
+    }
+
+    @Override
+    public void atacar(Reliquia objetivo) {
+        objetivo.recibirDano(getDano(), this);
     }
     
 }

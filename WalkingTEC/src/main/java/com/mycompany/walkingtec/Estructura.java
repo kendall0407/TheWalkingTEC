@@ -4,6 +4,7 @@
  */
 package com.mycompany.walkingtec;
 
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 
 /**
@@ -19,12 +20,19 @@ public abstract class Estructura {
     private String direccion; //apariencia
     private int nivel; //nivel, entrre mas nivel mas vida y ataque
     private JLabel refLabel;
-    private Pantalla refPantalla;
+    private PantallaJuego refPantalla;
 
-    public Estructura() {
-    }
-
-    
+    public Estructura(String nombre, int vida, int dano, int espacio, int nivelAparicion, String direccion, int nivel, JLabel refLabel, PantallaJuego refPantalla) {
+        this.nombre = nombre;
+        this.vida = vida;
+        this.dano = dano;
+        this.espacio = espacio;
+        this.nivelAparicion = nivelAparicion;
+        this.direccion = direccion;
+        this.nivel = nivel;
+        this.refLabel = refLabel;
+        this.refPantalla = refPantalla;
+    } 
     
 
     public String getNombre() {
@@ -53,7 +61,15 @@ public abstract class Estructura {
         this.espacio = espacio;
     }
     
-    public abstract void morir();
+    public void morir() {   
+        if (vida <= 0){
+            //this.setStop();
+            vida = 0;
+            ImageIcon icono = new ImageIcon(getClass().getResource("/images/Calavera.png"));
+            
+            refLabel.setIcon(icono);
+        }
+    }
     public abstract int recibirDano(int cantidadDano, Zombie atacante);
     
     
