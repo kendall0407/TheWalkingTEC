@@ -4,10 +4,23 @@
  */
 package com.mycompany.walkingtec;
 
+import javax.swing.JLabel;
+
 /**
  *
  * @author kendall-sanabria
  */
-public class SierraGiratoria {
+public class SierraGiratoria extends Estructura {
+
+    public SierraGiratoria(String nombre, int vida, int dano, int espacio, int nivelAparicion, int velocidadAtaque, String direccion, int nivel, JLabel refLabel, CampoBatalla refPantalla) {
+        super(nombre, vida, dano, espacio, nivelAparicion, velocidadAtaque, direccion, nivel, refLabel, refPantalla);
+    }
+
+   
+
+    @Override
+    public void atacar(Zombie objetivo) {
+        objetivo.recibirDano(getDano(), this);
+    }
     
 }

@@ -12,12 +12,18 @@ import javax.swing.JLabel;
  */
 public class ZombieVolador extends Zombie {
     
-    public ZombieVolador(JLabel refLabel, PantallaJuego refPantalla, int vida, int dano, int velocidad, int posX, int posY, String nombre, String dirrecion) {
+    public ZombieVolador(JLabel refLabel, CampoBatalla refPantalla, int vida, int dano, int velocidad, int posX, int posY, String nombre, String dirrecion) {
         super(refLabel, refPantalla, vida, dano, velocidad, posX, posY, nombre, dirrecion);
+        this.rango = 2;
     }
 
     @Override
     public void atacar(Reliquia objetivo) {
+        objetivo.recibirDano(getDano(), this);
+    }
+
+    @Override
+    public void atacarEstructura(Estructura objetivo) {
         objetivo.recibirDano(getDano(), this);
     }
     

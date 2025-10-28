@@ -33,9 +33,7 @@ public class PantallaJuego extends javax.swing.JFrame {
     }
     
     
-    public Point getReliquiaLocation() {
-        return new Point(this.reliquia.getX(), this.reliquia.getY());
-    }
+    
     
     public void moverZombie (JLabel refLabel, int x, int y, int xAntiguo, int yAntiguo){
         this.campo.moverZombie(refLabel, x, y, xAntiguo, yAntiguo);

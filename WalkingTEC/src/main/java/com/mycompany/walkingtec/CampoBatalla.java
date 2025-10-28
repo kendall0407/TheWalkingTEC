@@ -7,6 +7,7 @@ package com.mycompany.walkingtec;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Random;
 import javax.swing.*;
 /**
@@ -78,10 +79,13 @@ public class CampoBatalla extends javax.swing.JPanel {
         int celdaY = tableroP.y / 32;
 
         if (celdaX >= 0 && celdaY >= 0 && celdaX < columnas && celdaY < filas) {
-            if (celdas[celdaX][celdaY].esConstruible() && !celdas[celdaX][celdaY].estaOcupada()) {
-                crearTropaEnCelda(celdaX, celdaY, lblPoner);
-                repaint();
-                return true;
+            if (celdas[celdaX][celdaY].esConstruible()) {
+            crearTropaEnCelda(celdaX, celdaY, lblPoner);
+            repaint();
+            return true;
+            } else if (celdas[celdaX][celdaY].estaOcupada()) {
+                System.out.println("No se puede construir ahi!!");
+                return false;  
             } else {
                 System.out.println("No se puede construir ahi!!");
                 return false;
@@ -94,9 +98,49 @@ public class CampoBatalla extends javax.swing.JPanel {
     }
 
     private void crearTropaEnCelda(int y, int x, JLabel lblPoner) {
+        // asegurar texto no-nulo y usar switch para decidir comportamiento
+        String tipo = Objects.toString(lblPoner.getText(), "");
+        //String nombre, int vida, int dano, int espacio, int nivelAparicion, int velocidadAtaque, String direccion, int nivel, JLabel refLabel, CampoBatalla refPantalla
+        switch (tipo) {
+            case "mina": {
+                Estructura estructura = new Mina("Impacto", 10, 25, 1, 1, 1, "/images/Mina.png", 1, lblPoner, this);
+                celdas[x][y].ocuparEstructura(estructura);
+                break;
+            }
+            case "canon": {
+                Estructura estructura = new Cannon("Corto alcance", 50, 10, 5, 1, 2000, "/images/Canon.png", 1, lblPoner, this);
+                celdas[x][y].ocuparEstructura(estructura);
+                break;
+            }
+            case "torrearch": {
+                Estructura estructura = new TorreArquero("Ataque multiple", 60, 10, 10, 1, 2500, "/images/TorreArquero.png", 1, lblPoner, this);
+                celdas[x][y].ocuparEstructura(estructura);
+                break;
+            }
+            case "sierra": {
+                Estructura estructura = new SierraGiratoria("Cuerpo a cuerpo", 100, 35, 15, 1, 3000, "/images/SierraMovil.png", 1, lblPoner, this);
+                celdas[x][y].ocuparEstructura(estructura);
+                break;
+            }
+            case "muro": {
+                Estructura estructura = new Muro("Bloque", 50, 10, 1, 1, 2000, "/images/Muro.png", 1, lblPoner, this);
+                celdas[x][y].ocuparEstructura(estructura);
+                break;
+            }
+            case "torresan": {
+                Estructura estructura = new TorreSangre("Aereo", 100, 20, 5, 1, 2000, "/images/TorreSangre.png", 1000, lblPoner, this);
+                celdas[x][y].ocuparEstructura(estructura);
+                break;
+            }
+            default: {
+                lblPoner.setName("desconocido");
+                break;
+            }
+        }
+        
         celdas[x][y].agregarEntidad(lblPoner);
         celdas[x][y].ocupar();
-    }
+    }   
 
     private Reliquia colocarReliquia(){
         int centroFila = filas/2;
@@ -149,9 +193,15 @@ public class CampoBatalla extends javax.swing.JPanel {
 
             celdas[fila][columna].agregarEntidad(lblZombie);
             celdas[fila][columna].ocupar();
-
-            infectados.add(new ZombieTerrestre(lblZombie, refPantalla, 50, 4, 2000, fila, columna, "Terrestre", "/images/Zombies.png"));
+            
+            Zombie zombie = new ZombieTerrestre(lblZombie, this, 50, 4, 2000, fila, columna, "Terrestre", "/images/Zombies.png");
+            infectados.add(zombie);
+            celdas[fila][columna].ocuparZombie(zombie);
         }
+    }
+    
+    public int getNivel() {
+        return refPantalla.getNivel();
     }
     
     public void generarZombiesVolador(int nivel) {
@@ -179,8 +229,10 @@ public class CampoBatalla extends javax.swing.JPanel {
 
             celdas[fila][columna].agregarEntidad(lblZombie);
             celdas[fila][columna].ocupar();
-
-            infectados.add(new ZombieVolador(lblZombie, refPantalla, 30, 10, 2000, fila, columna, "Volador", "/images/ZombieVolador.png"));
+            
+            Zombie zombie = new ZombieVolador(lblZombie, this, 30, 10, 2000, fila, columna, "Volador", "/images/ZombieVolador.png");
+            infectados.add(zombie);
+            celdas[fila][columna].ocuparZombie(zombie);
         }
     }
      public void generarZombiesAlcance(int nivel) {
@@ -208,8 +260,10 @@ public class CampoBatalla extends javax.swing.JPanel {
 
             celdas[fila][columna].agregarEntidad(lblZombie);
             celdas[fila][columna].ocupar();
-
-            infectados.add(new ZombieAlcance(lblZombie, refPantalla, 30, 12, 2000, fila, columna, "Tanque", "/images/ZombieAlcance.png"));
+            
+            Zombie zombie = new ZombieAlcance(lblZombie, this, 30, 12, 2000, fila, columna, "Tanque", "/images/ZombieAlcance.png");
+            infectados.add(zombie);
+            celdas[fila][columna].ocuparZombie(zombie);
         }
    
     }
@@ -239,8 +293,10 @@ public class CampoBatalla extends javax.swing.JPanel {
 
             celdas[fila][columna].agregarEntidad(lblZombie);
             celdas[fila][columna].ocupar();
-
-            infectados.add(new ZombieTanque(lblZombie, refPantalla, 200, 8, 2000, fila, columna, "Tanque", "/images/ZombieTanque.png"));
+            
+            Zombie zombie = new ZombieTanque(lblZombie, this, 200, 8, 2000, fila, columna, "Tanque", "/images/ZombieTanque.png");
+            infectados.add(zombie);
+            celdas[fila][columna].ocuparZombie(zombie);
             }
 
         
@@ -255,7 +311,7 @@ public class CampoBatalla extends javax.swing.JPanel {
     public Celda getCelda(int fila, int columna) {
         return celdas[fila][columna];
     }
-    
+        
     public void aumentarEstadisticas() {
         //se recorren los zombies
         for (Zombie zombie : infectados) {
@@ -305,6 +361,10 @@ public class CampoBatalla extends javax.swing.JPanel {
         refPantalla.avanzarNivel();
         aumentarEstadisticas();
         return 1; //si gano, 2 si perdio pero falta agregarle esas condiciones 
+    }
+    
+    public Point getReliquiaLocation() {
+        return new Point(this.reliquia.getX(), this.reliquia.getY());
     }
     
     public void detenerJuego() {

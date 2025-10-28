@@ -12,16 +12,13 @@ import javax.swing.JLabel;
  */
 public class Mina extends Estructura { 
 
-    public Mina(String nombre, int vida, int dano, int espacio, int nivelAparicion, String direccion, int nivel, JLabel refLabel, PantallaJuego refPantalla) {
-        super(nombre, vida, dano, espacio, nivelAparicion, direccion, nivel, refLabel, refPantalla);
+    public Mina(String nombre, int vida, int dano, int espacio, int nivelAparicion, int velocidadAtaque, String direccion, int nivel, JLabel refLabel, CampoBatalla refPantalla) {
+        super(nombre, vida, dano, espacio, nivelAparicion, velocidadAtaque, direccion, nivel, refLabel, refPantalla);
     }
-//creo que es hija de estructura
-
-
 
     @Override
-    public int recibirDano(int cantidadDano, Zombie atacante) {
-        return 0; //falta
+    public void atacar(Zombie objetivo) {
+        objetivo.recibirDano(getDano(), this);
     }
     
 }

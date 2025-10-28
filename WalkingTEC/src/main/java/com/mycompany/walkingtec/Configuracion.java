@@ -29,7 +29,7 @@ public class Configuracion extends JPanel {
         setBackground(Color.DARK_GRAY);
 
         // Crear los lbl de las estructuras arrastrables
-        JLabel Mina = new JLabel("🧟");
+        JLabel Mina = new JLabel("mina");
         Mina.setBounds(15, 80, 50, 50);
         Mina.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Mina.png")));
         Mina.setFont(new Font("Sans", Font.PLAIN, 40));
@@ -37,16 +37,16 @@ public class Configuracion extends JPanel {
         add(Mina);
         
         
-        JLabel Canon = new JLabel("🧟");
+        JLabel Canon = new JLabel("canon");
         Canon.setBounds(65, 80, 50, 50);
         Canon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Cañon.png")));
         Canon.setFont(new Font("Sans", Font.PLAIN, 40));
         addArrastrable(Canon);
         add(Canon);
-        //new Cannon();
+        //new Cannon("Corto alcance", 50, 10, 5, 1, 2000, "en la esquina", 1, Canon, campo);
         
        
-        JLabel TorreArquero = new JLabel("🧟");
+        JLabel TorreArquero = new JLabel("torrearch");
         TorreArquero.setBounds(115, 80, 50, 50);
         TorreArquero.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/TorreArquero.png")));
         TorreArquero.setFont(new Font("Sans", Font.PLAIN, 40));
@@ -54,7 +54,7 @@ public class Configuracion extends JPanel {
         add(TorreArquero);
         
     
-        JLabel Sierra = new JLabel("🧟");
+        JLabel Sierra = new JLabel("sierra");
         Sierra.setBounds(15, 130, 50, 50);
         Sierra.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/SierraMovil.png")));
         Sierra.setFont(new Font("Sans", Font.PLAIN, 40));
@@ -62,14 +62,14 @@ public class Configuracion extends JPanel {
         add(Sierra);
         
     
-        JLabel Muro = new JLabel("🧟");
+        JLabel Muro = new JLabel("muro");
         Muro.setBounds(65, 130, 50, 50);
         Muro.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Muro.png")));
         Muro.setFont(new Font("Sans", Font.PLAIN, 40));
         addArrastrable(Muro);
         add(Muro);
         
-        JLabel TorreSangre = new JLabel("🧟");
+        JLabel TorreSangre = new JLabel("torresan");
         TorreSangre.setBounds(115, 130, 50, 50);
         TorreSangre.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/TorreSangre.png")));
         TorreSangre.setFont(new Font("Sans", Font.PLAIN, 40));
@@ -137,9 +137,6 @@ public class Configuracion extends JPanel {
             }
             
         });
-        
-
-
         // Agregar al panel
         add(btnJugar);
     }

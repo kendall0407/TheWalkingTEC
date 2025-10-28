@@ -13,14 +13,16 @@ import javax.swing.JLabel;
  */
 public class Cannon extends Estructura {
 
-    public Cannon(String nombre, int vida, int dano, int espacio, int nivelAparicion, String direccion, int nivel, JLabel refLabel, PantallaJuego refPantalla) {
-        super(nombre, vida, dano, espacio, nivelAparicion, direccion, nivel, refLabel, refPantalla);
+    public Cannon(String nombre, int vida, int dano, int espacio, int nivelAparicion, int velocidadAtaque, String direccion, int nivel, JLabel refLabel, CampoBatalla refPantalla) {
+        super(nombre, vida, dano, espacio, nivelAparicion, velocidadAtaque, direccion, nivel, refLabel, refPantalla);
     }
+
+    
     
 
     @Override
-    public int recibirDano(int cantidadDano, Zombie atacante) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public void atacar(Zombie objetivo) {
+        objetivo.recibirDano(getDano(), this);
     }
     
 }

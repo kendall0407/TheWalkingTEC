@@ -15,6 +15,11 @@ public class Celda extends javax.swing.JPanel {
 
     private boolean ocupada;
     private boolean construible;
+    private Zombie zombie;
+    private Estructura estructura;
+    private boolean ocupadaZombie = false;
+    private boolean ocupadaEstructura = false;
+    
     public Celda() {
         initComponents();
         this.ocupada = false;
@@ -28,6 +33,31 @@ public class Celda extends javax.swing.JPanel {
         return ocupada;
     }
     
+    public Zombie estaOcupadaZombie() {
+        if(ocupadaZombie) {
+            return zombie;
+        }
+        return null;
+    }
+    
+    public Estructura estaOcupadaEstructura() {
+        if(ocupadaEstructura) {
+            return estructura;
+        }
+        return null;
+    }
+    
+    
+    public void ocuparZombie(Zombie zombie){
+        this.zombie = zombie;
+        this.ocupadaZombie = true;
+
+    }
+    public void ocuparEstructura(Estructura estructura){
+        this.estructura = estructura;
+        this.ocupadaEstructura = true;
+
+    }
     public void ocupar(){
         this.ocupada = true;
         setBackground(Color.RED);
