@@ -19,9 +19,14 @@ public abstract class Habilidad {
     public abstract void ataqueBase();
     public abstract void ataqueSecundario();
     public abstract void ataqueEspecial();
-    
-    @Override
-    public String toString(){
+
+    public String getNombre() {
         return nombre;
     }
+    
+    @Override
+    public String toString() {
+        return getNombre(); // o el campo que represente el nombre de la habilidad
+    }
+
 }
