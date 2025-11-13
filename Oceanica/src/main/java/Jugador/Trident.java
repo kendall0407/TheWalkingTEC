@@ -10,8 +10,7 @@ package Jugador;
  */
 public class Trident extends Habilidad {
 
-    public Trident(String nombre) {
-        super(nombre);
+    public Trident() {
     }
 
     @Override
@@ -29,4 +28,8 @@ public class Trident extends Habilidad {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
     
+    @Override
+    public String toString() {
+        return "The Trident";
+    }
 }

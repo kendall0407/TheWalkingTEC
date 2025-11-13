@@ -28,7 +28,10 @@ public class Luchador {
         this.resistencia = resistencia;
         this.direccionImagen = direccionImagen;
     }
-
+    
+    public void atacar(){
+        //TODO
+    }
     public String getNombre() {
         return nombre;
     }

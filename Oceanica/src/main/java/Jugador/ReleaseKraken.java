@@ -10,8 +10,7 @@ package Jugador;
  */
 public class ReleaseKraken extends Habilidad {
 
-    public ReleaseKraken(String nombre) {
-        super(nombre);
+    public ReleaseKraken() {
     }
 
     @Override
@@ -29,4 +28,8 @@ public class ReleaseKraken extends Habilidad {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
     
+    @Override
+    public String toString() {
+        return "Release Kraken";
+    }
 }

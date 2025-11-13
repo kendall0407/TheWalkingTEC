@@ -10,8 +10,8 @@ package Jugador;
  */
 public class ThunderUnderTheSea extends Habilidad {
 
-    public ThunderUnderTheSea(String nombre) {
-        super(nombre);
+    public ThunderUnderTheSea( ) {
+
     }
 
     @Override
@@ -28,5 +28,8 @@ public class ThunderUnderTheSea extends Habilidad {
     public void ataqueEspecial() {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
-    
+    @Override
+    public String toString() {
+        return "Thunders Under The Sea ";
+    }
 }

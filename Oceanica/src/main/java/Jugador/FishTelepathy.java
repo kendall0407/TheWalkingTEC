@@ -10,8 +10,7 @@ package Jugador;
  */
 public class FishTelepathy extends Habilidad {
 
-    public FishTelepathy(String nombre) {
-        super(nombre);
+    public FishTelepathy( ) {
     }
 
     @Override
@@ -27,6 +26,11 @@ public class FishTelepathy extends Habilidad {
     @Override
     public void ataqueEspecial() {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+    
+    @Override
+    public String toString() {
+        return "Fish Telepathy";
     }
     
 }

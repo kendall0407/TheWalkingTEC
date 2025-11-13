@@ -10,8 +10,8 @@ package Jugador;
  */
 public class WavesControl extends Habilidad {
 
-    public WavesControl(String nombre) {
-        super(nombre);
+    public WavesControl( ) {
+
     }
 
     @Override
@@ -29,4 +29,9 @@ public class WavesControl extends Habilidad {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
     
+    
+    @Override
+    public String toString() {
+        return "Waves Control";
+    }
 }
