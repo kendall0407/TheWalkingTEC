@@ -11,6 +11,7 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import java.net.*;
 
 /**
  *
@@ -22,12 +23,14 @@ public class Configuracion extends javax.swing.JFrame {
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Configuracion.class.getName());
     private String direccionImagen;
     private int contadorCivilizaciones = 0;
+    private Client cliente;
     /**
      * Creates new form Configuracion
      */
     public Configuracion() {
         initComponents();
         imagen();
+        btnJugar.setEnabled(false);
     }
 
     /**
@@ -91,12 +94,12 @@ public class Configuracion extends javax.swing.JFrame {
 
         boxHabilidad.setModel(new DefaultComboBoxModel<>(
             new Habilidad[] {
-                new ThunderUnderTheSea("Thunder Under The Sea"),
-                new FishTelepathy("Fish Telepathy"),
-                new ReleaseKraken("Release The Kraken"),
-                new WavesControl("Waves Control"),
-                new Trident("The Trident"),
-                new UnderseaVolcanoes("Undersea Volcanoes")
+                new ThunderUnderTheSea(),
+                new FishTelepathy(),
+                new ReleaseKraken(),
+                new WavesControl(),
+                new Trident(),
+                new UnderseaVolcanoes()
             }));
             boxHabilidad.addActionListener(new java.awt.event.ActionListener() {
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -253,6 +256,8 @@ public class Configuracion extends javax.swing.JFrame {
             String nombreCivilizacion =txfNombreC.getText();
             Civilizacion civilizacion = new Civilizacion(nombreCivilizacion, luchadores.get(0), luchadores.get(1), luchadores.get(2));
             contadorCivilizaciones++;
+            cliente = new Client(civilizacion);
+            btnJugar.setEnabled(true);
         }
         
         
@@ -291,8 +296,8 @@ public class Configuracion extends javax.swing.JFrame {
     }//GEN-LAST:event_btnAgregarLuchadorActionPerformed
 
     private void btnJugarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnJugarActionPerformed
-        //cargar civilizaciones en el juego
-    }//GEN-LAST:event_btnJugarActionPerformed
+        cliente.connect();
+    }
        
     private void imagen(){
         btnCargarImagen.addActionListener(e -> {

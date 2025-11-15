@@ -1,15 +1,19 @@
-/home/kendall-sanabria/TheWalkingTEC/Oceanica/src/main/java/Jugador/Celda.java
-/home/kendall-sanabria/TheWalkingTEC/Oceanica/src/main/java/Jugador/Civilizacion.java
-/home/kendall-sanabria/TheWalkingTEC/Oceanica/src/main/java/Jugador/Client.java
-/home/kendall-sanabria/TheWalkingTEC/Oceanica/src/main/java/Jugador/Configuracion.java
-/home/kendall-sanabria/TheWalkingTEC/Oceanica/src/main/java/Jugador/FishTelepathy.java
-/home/kendall-sanabria/TheWalkingTEC/Oceanica/src/main/java/Jugador/FrameClient.java
-/home/kendall-sanabria/TheWalkingTEC/Oceanica/src/main/java/Jugador/Habilidad.java
-/home/kendall-sanabria/TheWalkingTEC/Oceanica/src/main/java/Jugador/Luchador.java
-/home/kendall-sanabria/TheWalkingTEC/Oceanica/src/main/java/Jugador/ReleaseKraken.java
-/home/kendall-sanabria/TheWalkingTEC/Oceanica/src/main/java/Jugador/ThunderUnderTheSea.java
-/home/kendall-sanabria/TheWalkingTEC/Oceanica/src/main/java/Jugador/Trident.java
-/home/kendall-sanabria/TheWalkingTEC/Oceanica/src/main/java/Jugador/UnderseaVolcanoes.java
-/home/kendall-sanabria/TheWalkingTEC/Oceanica/src/main/java/Jugador/WavesControl.java
-/home/kendall-sanabria/TheWalkingTEC/Oceanica/src/main/java/ServerPackage/Servidor.java
-/home/kendall-sanabria/TheWalkingTEC/Oceanica/src/main/java/com/mycompany/oceanica/Oceanica.java
+C:\Users\josed\Desktop\Programación Orientada a Objetos\TheWalkingTEC\Oceanica\src\main\java\com\mycompany\oceanica\Oceanica.java
+C:\Users\josed\Desktop\Programación Orientada a Objetos\TheWalkingTEC\Oceanica\src\main\java\Jugador\Celda.java
+C:\Users\josed\Desktop\Programación Orientada a Objetos\TheWalkingTEC\Oceanica\src\main\java\Jugador\Civilizacion.java
+C:\Users\josed\Desktop\Programación Orientada a Objetos\TheWalkingTEC\Oceanica\src\main\java\Jugador\Client.java
+C:\Users\josed\Desktop\Programación Orientada a Objetos\TheWalkingTEC\Oceanica\src\main\java\Jugador\Configuracion.java
+C:\Users\josed\Desktop\Programación Orientada a Objetos\TheWalkingTEC\Oceanica\src\main\java\Jugador\FishTelepathy.java
+C:\Users\josed\Desktop\Programación Orientada a Objetos\TheWalkingTEC\Oceanica\src\main\java\Jugador\FrameClient.java
+C:\Users\josed\Desktop\Programación Orientada a Objetos\TheWalkingTEC\Oceanica\src\main\java\Jugador\Habilidad.java
+C:\Users\josed\Desktop\Programación Orientada a Objetos\TheWalkingTEC\Oceanica\src\main\java\Jugador\Luchador.java
+C:\Users\josed\Desktop\Programación Orientada a Objetos\TheWalkingTEC\Oceanica\src\main\java\Jugador\ReleaseKraken.java
+C:\Users\josed\Desktop\Programación Orientada a Objetos\TheWalkingTEC\Oceanica\src\main\java\Jugador\ThreadClient.java
+C:\Users\josed\Desktop\Programación Orientada a Objetos\TheWalkingTEC\Oceanica\src\main\java\Jugador\ThunderUnderTheSea.java
+C:\Users\josed\Desktop\Programación Orientada a Objetos\TheWalkingTEC\Oceanica\src\main\java\Jugador\Trident.java
+C:\Users\josed\Desktop\Programación Orientada a Objetos\TheWalkingTEC\Oceanica\src\main\java\Jugador\UnderseaVolcanoes.java
+C:\Users\josed\Desktop\Programación Orientada a Objetos\TheWalkingTEC\Oceanica\src\main\java\Jugador\WavesControl.java
+C:\Users\josed\Desktop\Programación Orientada a Objetos\TheWalkingTEC\Oceanica\src\main\java\Models\Command.java
+C:\Users\josed\Desktop\Programación Orientada a Objetos\TheWalkingTEC\Oceanica\src\main\java\Models\CommandType.java
+C:\Users\josed\Desktop\Programación Orientada a Objetos\TheWalkingTEC\Oceanica\src\main\java\ServerPackage\Servidor.java
+C:\Users\josed\Desktop\Programación Orientada a Objetos\TheWalkingTEC\Oceanica\src\main\java\ServerPackage\ThreadServidor.java

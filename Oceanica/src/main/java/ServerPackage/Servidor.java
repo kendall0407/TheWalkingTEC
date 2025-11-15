@@ -4,6 +4,8 @@
  */
 package ServerPackage;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.*;
 
@@ -14,8 +16,10 @@ import java.net.*;
 public class Servidor {
     private final int PORT = 1509;
     ServerSocket server;
-    Socket[] clientesSocket = new Socket[4]; //Arreglo de clientes.
-
+    Socket clientesSocket; //Arreglo de clientes.
+    DataOutputStream writer;
+    DataInputStream listener;
+    
     public Servidor() {
         
         
@@ -36,9 +40,11 @@ public class Servidor {
         int jugadoresContador = 0;
         System.out.println("Esperando jugadores...");
         try {
-            clientesSocket[jugadoresContador++] = server.accept();
+            clientesSocket = server.accept();
+            writer = new DataOutputStream(clientesSocket.getOutputStream());
+            listener = new DataInputStream(clientesSocket.getInputStream());
             if (jugadoresContador < 4){
-                System.out.println("Se conectó un jugador a la sala ()");
+                System.out.println("Un jugador ha entrado a la sala (" + ++jugadoresContador + "/4)");
             } else {
                 System.out.println("Sala llena, comenzando la partida...");
             }

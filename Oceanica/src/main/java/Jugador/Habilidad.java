@@ -8,7 +8,10 @@ package Jugador;
  *
  * @author kendall-sanabria
  */
-public abstract class Habilidad {    
+public abstract class Habilidad {
+    private String nombre;
+
+    
     public Habilidad() {
 
     }
@@ -18,4 +21,10 @@ public abstract class Habilidad {
     public abstract void ataqueSecundario();
     public abstract void ataqueEspecial();
 
+    public String getNombre() {
+        return nombre;
+    }
+
+    
+    
 }

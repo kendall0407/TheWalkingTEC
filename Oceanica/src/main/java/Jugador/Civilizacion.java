@@ -22,6 +22,11 @@ public class Civilizacion {
         this.luchador1 = luchador1;
         this.luchador2 = luchador2;
         this.luchador3 = luchador3;
+        this.luchadores = new ArrayList<>();
+        if (luchador1 != null) this.luchadores.add(luchador1);
+        if (luchador2 != null) this.luchadores.add(luchador2);
+        if (luchador3 != null) this.luchadores.add(luchador3);
+        
     }
 
     public String getNombreCivilizacion() {

@@ -15,8 +15,9 @@ import java.net.Socket;
  */
 public class Client {
     
+    
     private Civilizacion civilizacion;
-    private final int PORT = 35500;
+    private final int PORT = 1509;
     private final String IP_ADDRESS = "localhost";
     private Socket socket;
     private FrameClient refFrame;
@@ -44,7 +45,7 @@ public class Client {
         frame.colocarInfoCasillas(civilizacion.getLuchadores());
     }
     
-    private void connect (){
+    public void connect (){
         try {
             socket = new Socket(IP_ADDRESS , PORT);
             sender = new DataOutputStream(socket.getOutputStream());    
