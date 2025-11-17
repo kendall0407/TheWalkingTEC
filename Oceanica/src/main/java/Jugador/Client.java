@@ -4,11 +4,15 @@
  */
 package Jugador;
 
-import Models.Command;
+
+import Models.CommandType;
+import Models.OwnInfo;
+import Models.StatusCommand;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.ArrayList;
 
 /**
  *
@@ -31,12 +35,12 @@ public class Client {
     private int ID;
     private ClientState currentState = ClientState.WAITING_ACTION;
     private int luchadorSeleccionado = -1;
-
+    private int ataque;
     public Client(Civilizacion civilizacion) {
         this.civilizacion = civilizacion;
         
         //poner los luchadores en la interfaz
-        refFrame = new FrameClient();
+        refFrame = new FrameClient(this);
         refFrame.setVisible(true);
 
         for (int i = 1; i <= 3; i++) {
@@ -72,6 +76,15 @@ public class Client {
             sender = new ObjectOutputStream(socket.getOutputStream());    
             listener = new ObjectInputStream(socket.getInputStream()); 
             
+            String params = this.getCivilizacion().getNombreCivilizacion();
+            OwnInfo cmd = new OwnInfo(CommandType.CIVILIZATION, params);
+            
+            try {
+                sender.writeObject(cmd);
+                sender.flush();
+            } catch (IOException ex) {
+                System.out.println("Error enviando STATUS");
+            }
             threadClient =  new ThreadClient(this);
             threadClient.start();
             
@@ -96,17 +109,15 @@ public class Client {
                     );
                     currentState = ClientState.SELECTING_FIGHTER;
                 } else if (msg.equals("2")){
-                    refFrame.agregarEstado("Poder aplicado correctamente");
-                    //TODO: aplicar poder
-                } else if (msg.equals("3")){
-                    refFrame.agregarEstado("Resistencia aplicado correctamente");
-                    //TODO: aplicar resistencia
-                } else if (msg.equals("4")){
-                    refFrame.agregarEstado("Sanidad aplicado correctamente");
-                    //TODO: aplicar sanidad
-                } else if (msg.equals("5")){
                     refFrame.agregarEstado("El estado enemigo es: ");
-                    //TODO: estado enemigo
+                    String[] params = {}; // no ocupa parámetros
+                    StatusCommand cmd = new StatusCommand(CommandType.STATUS, params);
+                    try {
+                        sender.writeObject(cmd);
+                        sender.flush();
+                    } catch (IOException ex) {
+                        System.out.println("Error enviando STATUS");
+                    }
                 }
                 break;
 
@@ -119,20 +130,62 @@ public class Client {
                     "Ataques disponibles:\n" +
                     "1. " + hab.getAtaqueBase() + "\n" +
                     "2. " + hab.getAtaqueSecundaria() + "\n" +
-                    "3. " + hab.getAtaqueEspecial()
+                    "3. " + hab.getAtaqueEspecial() + "\n" +
+                    "4. Poder" + "\n" + 
+                    "5. Resistencia" + "\n" +
+                    "6. Sanidad"
                 );
 
                 currentState = ClientState.SELECTING_ATTACK;
                 break;
 
             case SELECTING_ATTACK:
-                int ataque = Integer.parseInt(msg);
-                //enviarAttackCommand(luchadorSeleccionado, ataque);
+                switch (msg) {
+                                // parameters[0] = nombre del atacante
+                // parameters[1] = nombre del objetivo
+                // parameters[2] = tipo de ataque
+                // parameters[3] = daño
+    //                ataque = Integer.parseInt(msg);
+    //                String[] params = { 
+    //                    ataque;
+    //                };
+    //                AttackCommand cmd = new AttackCommand(params);
+    //                try {
+    //                    sender.writeObject(cmd);
+    //                    sender.flush();
+    //                } catch (IOException ex) {
+    //
+    //                } 
+                    case "4":
+                        {
+                            ArrayList<Celda> celdas = civilizacion.getLuchador(luchadorSeleccionado).getCeldas();
+                            for (int i = 0; i < celdas.size(); i++){
+                                celdas.get(i).aplicarPoder(civilizacion.getLuchador(luchadorSeleccionado).getPoder());
+                            }   break;
+                        }
+                    case "5":
+                        {
+                            ArrayList<Celda> celdas = civilizacion.getLuchador(luchadorSeleccionado).getCeldas();
+                            for (int i = 0; i < celdas.size(); i++){
+                                celdas.get(i).aplicarResistencia(civilizacion.getLuchador(luchadorSeleccionado).getResistencia());
+                            }   break;
+                        }
+                    case "6":
+                        {
+                            ArrayList<Celda> celdas = civilizacion.getLuchador(luchadorSeleccionado).getCeldas();
+                            for (int i = 0; i < celdas.size(); i++){
+                                celdas.get(i).aplicarSanidad(civilizacion.getLuchador(luchadorSeleccionado).getSanidad());
+                            }   break;
+                        }
+                    default:
+                        break;
+                }
 
                 refFrame.agregarEstado("Ataque enviado exitosamente!");
 
                 currentState = ClientState.WAITING_ACTION;
                 break;
+
         }
     }
     
@@ -168,5 +221,6 @@ public class Client {
     
     public void setID(String id) {
         this.ID = Integer.parseInt(id);
+        refFrame.agregarBitacora("Eres el jugador J" + id);
     }
 }

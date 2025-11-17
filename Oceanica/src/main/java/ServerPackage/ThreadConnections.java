@@ -13,41 +13,49 @@ import java.net.Socket;
  *
  * @author kendall-sanabria
  */
-public class ThreadConnections extends Thread{
-    private Servidor server;
+public class ThreadConnections extends Thread {
+
+    private final Servidor server;
     private int jugadoresContador = 0;
+
     public ThreadConnections(Servidor server) {
         this.server = server;
     }
-    
-    
-    //Recibir unicamente conexiones y crear los threads del server
+
     @Override
     public void run() {
-        Socket newSocket = null;
-        while (  server.getConnectedClients().size() <= server.getMaxConections() ){
-            if (server.getConnectedClients().size() == server.getMaxConections()) {
-                server.writeMessage("Sala llena, comenzando la partida...");
-                
-                return;
-            }
+        Socket newSocket;
+
+        // Esperar únicamente hasta que lleguen los 4 jugadores
+        while (server.getConnectedClients().size() < server.getMaxConections()) {
+
             server.writeMessage("Esperando jugadores...");
             try {
-                
                 newSocket = server.getServer().accept();
-                ThreadServidor newServerThread = new ThreadServidor(server, newSocket, jugadoresContador); //jugadoresContador = id
+
+                ThreadServidor newServerThread =
+                        new ThreadServidor(server, newSocket, jugadoresContador);
+
                 server.getConnectedClients().add(newServerThread);
                 newServerThread.start();
-                server.writeMessage("Un jugador ha entrado a la sala ("+ ++jugadoresContador+"/4)");
-                server.writeMessage("cliente conectado");
+
+                server.writeMessage("Un jugador ha entrado a la sala (" +
+                        (jugadoresContador + 1) + "/4)");
+
+                jugadoresContador++;
+
             } catch (IOException ex) {
-                server.writeMessage("Error: " +  ex.getMessage());
+                server.writeMessage("Error: " + ex.getMessage());
             }
         }
-            
 
-        
+        // Cuando está lleno, comienza la partida
+        server.writeMessage("Sala llena, comenzando partida...");
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException ex) {
+            System.getLogger(ThreadConnections.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        }
+        server.iniciarNuevaRonda(); 
     }
 }
-
-

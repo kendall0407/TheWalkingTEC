@@ -58,9 +58,6 @@ public class AttackCommand extends Command implements Serializable {
             client.agregarMensajeEstado("Estado: Ataque enviado con exito");
         }
     }
-    
 
-    protected String[] getParameters() {
-        return parameters;
-    }
+
 }

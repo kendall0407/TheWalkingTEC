@@ -5,6 +5,7 @@
 package Jugador;
 
 import java.awt.Color;
+import java.util.ArrayList;
 /**
  *
  * @author kendall-sanabria
@@ -19,7 +20,8 @@ public class Luchador {
     private int resistencia;
     private String direccionImagen;
     private Color color;
-
+    public ArrayList<Celda> celdas = new ArrayList<>();
+    
     public Luchador(String civilizacion, String nombre, Habilidad habilidad, int representacion, int poder, int sanidad, int resistencia, String direccionImagen) {
         this.civilizacion = civilizacion;
         this.nombre = nombre;
@@ -73,6 +75,15 @@ public class Luchador {
     public void setColor(Color color) {
         this.color = color;
     }
+
+    public ArrayList<Celda> getCeldas() {
+        return celdas;
+    }
+
+    public void addCeldas(Celda c) {
+        this.celdas.add(c);
+    }
+    
     
     
 }

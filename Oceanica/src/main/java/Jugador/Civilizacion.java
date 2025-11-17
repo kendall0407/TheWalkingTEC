@@ -4,13 +4,14 @@
  */
 package Jugador;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  *
  * @author kendall-sanabria
  */
-public class Civilizacion {
+public class Civilizacion implements Serializable {
     private String nombreCivilizacion;
     private Luchador luchador1;
     private Luchador luchador2;

@@ -6,6 +6,7 @@ package Jugador;
 
 import java.io.IOException;
 import Models.Command;
+import Models.StatusResponseCommand;
 /**
  *
  * @author kendall-sanabria
@@ -32,8 +33,9 @@ public class ThreadClient extends Thread{
                     cmd.processInClient(client);
                 }
 
-                //TODO
-                //leer el mensaje, procesarlo ... decidir qué hacer
+                else {
+                    client.agregarMensajeBitacora((String) obj);
+                }
             } catch (IOException ex) {
                 
             } catch (ClassNotFoundException ex) {

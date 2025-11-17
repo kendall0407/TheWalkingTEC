@@ -15,34 +15,36 @@ import java.util.ArrayList;
  *
  * @author josed
  */
+
+
 public class Servidor {
     private final int PORT = 1509;
-    ServerSocket server;
+    private ServerSocket server;
     private final int maxConections = 4;
-    Socket clientesSocket; //Arreglo de clientes.
-    ObjectOutputStream writer;
-    ObjectInputStream listener;
-    private ArrayList<ThreadServidor> connectedClients; // arreglo de hilos por cada jugador conectado
+    private ArrayList<ThreadServidor> connectedClients;
     private ThreadConnections connectionsThread;
+    
+    // Sistema de turnos y rondas
+    private int turnoActual = 0;  
+    private int rondaActual = 0;
+    private final Object turnoLock = new Object();
     
     public Servidor() {
         connectedClients = new ArrayList<>();
     }
     
-    //Levantar el servidor.
     public void conectarServidor(){
         try {
             server = new ServerSocket(PORT);
+            System.out.println("Servidor iniciado en puerto " + PORT);
             connectionsThread = new ThreadConnections(this);
             connectionsThread.start();
         } catch (IOException ex){
-            
+            System.err.println("Error iniciando servidor: " + ex.getMessage());
         }
     }
     
-
     public void broadcast(String msg){      
-        // manda mensajes en los txa de bitacora y status a txaataque del client
         for (ThreadServidor client : connectedClients) {
             try {
                 client.sender.writeObject(msg);  
@@ -52,7 +54,6 @@ public class Servidor {
             }
         }
     }
-    
     
     public void broadcastCommand(Command cmd){
         for (ThreadServidor client : connectedClients) {
@@ -65,43 +66,105 @@ public class Servidor {
         }
     }
     
+    //Iniciar nueva ronda
+    public void iniciarNuevaRonda() {
+        synchronized (turnoLock) {
+            rondaActual++;
+            turnoActual = 0;
+            
+            writeMessage("=== RONDA " + rondaActual + " ===");
+            broadcast("=== RONDA " + rondaActual + " ===");
+            
+            // Asignar objetivos a todos
+            for (ThreadServidor client : connectedClients) {
+                client.asignarNuevoObjetivo();
+            }
+            
+            //Notificar al primer jugador
+            notificarTurno();
+        }
+    }
+    
+    //Notificar al jugador actual que es su turno
+    public void notificarTurno() {
+        synchronized (turnoLock) {
+            writeMessage("Turno de J" + turnoActual);
+            broadcast("Turno de J" + turnoActual);
+            
+            for (ThreadServidor client : connectedClients) {
+                if (client.getIdJugador() == turnoActual) {
+                    client.notificarTurno();
+                    break;
+                }
+            }
+        }
+    }
+    
+    //Avanzar al siguiente turno
+    public void siguienteTurno() {
+        synchronized (turnoLock) {
+            turnoActual++;
+            
+            if (turnoActual > maxConections) {
+                writeMessage("Ronda " + rondaActual + " completada.");
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {}
+                iniciarNuevaRonda();
+            } else {
+                notificarTurno();
+            }
+        }
+    }
+    
+    //elegir objetivo para un jugador
     public int elegirObjetivo(int id) {
-        int objetivo = 0;
-        if (id !=3) 
-            objetivo = id++;
-        else
-            objetivo = 0;
-        return objetivo;
+        if (id != maxConections-1) {
+            return id + 1;
+        } else {
+            return 0;
+        }
+    }
+    
+    // Validar si es el turno de un jugador
+    public boolean esTurnoDeJugador(int idJugador) {
+        synchronized (turnoLock) {
+            return turnoActual == idJugador;
+        }
     }
     
     public int getMaxConections() {
         return maxConections;
     }
-
+    
     public ArrayList<ThreadServidor> getConnectedClients() {
         return connectedClients;
     }
-
+    
     public ServerSocket getServer() {
         return server;
-    }
-
-    public Socket getClientesSocket() {
-        return clientesSocket;
     }
     
     public void writeMessage(String msg){
         System.out.println(msg);
     }
-
-
     
+    public int getTurnoActual() {
+        synchronized (turnoLock) {
+            return turnoActual;
+        }
+    }
     
+    public int getRondaActual() {
+        return rondaActual;
+    }
+    
+    public ThreadServidor getConnection(int i) {
+        return this.connectedClients.get(i);
+    }
     
     public static void main(String[] args) {
         Servidor s = new Servidor();
         s.conectarServidor();
     }
-    
-    
 }

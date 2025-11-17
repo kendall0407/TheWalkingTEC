@@ -15,7 +15,9 @@ public enum CommandType {
     GIVEUP (1),
     DEFEND (1),      
     HEAL (2),        
-    STATUS (2),
+    STATUS (1),
+    STATUSRESPONSE(1),
+    CIVILIZATION(1),
     ASSIGN_TARGET(1);
     
     private int requiredParameters;

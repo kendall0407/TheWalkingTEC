@@ -19,6 +19,11 @@ public class Celda extends JPanel {
     private Object contenido; // Luchador
     private FrameClient reframe;
     private int estado;  // 0 es viva, 1 es muerta
+    private int vida;
+    private int poder;
+    private int sanidad;
+    private int resistencia;
+    
     public Celda(int fila, int columna, FrameClient reframe) {
         this.fila = fila;
         this.columna = columna;
@@ -26,6 +31,7 @@ public class Celda extends JPanel {
         this.tipo = "vacia";
         this.reframe = reframe;
         this.estado = 0;
+        this.vida = 100;
         setBackground(Color.WHITE);
         setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
         
@@ -62,7 +68,8 @@ public class Celda extends JPanel {
             luchador = "Celda sin ocupar";
         this.reframe.agregarEstado("x = "+this.fila+", y = "+this.columna
         + "\nJugador de civilizacion: " + reframe.getClient().getCivilizacion().getNombreCivilizacion()
-        + estado + "\n" + luchador);
+        +"\n" +estado + "\nLuchador: " + luchador + "\nSanidad aplicada: " + this.sanidad 
+        + " |  Poder aplicado: " + this.poder + " | Resistencia aplicada: "+ this.resistencia);
         /* falta Mostrar
         quién la aniquiló, todos
         los ataques recibidos, sanidad, escudos, etc.
@@ -77,6 +84,24 @@ public class Celda extends JPanel {
     }
     public void ocupar(Luchador luchador) {
         ocupada = luchador;
+    }
+    
+    public void dano (int dano) {
+        if (resistencia!=0)
+            dano -= dano * resistencia / 100; //resta porcentaje de resistencia de celda
+        this.vida -= dano;
+        if (this.vida <= 0) 
+            morir();
+    }
+    
+    public void aplicarPoder(int poder) {
+        this.poder += poder;
+    }
+    public void aplicarSanidad(int sanidad) {
+        this.sanidad += sanidad;
+    }
+    public void aplicarResistencia(int resistencia) {
+        this.resistencia += resistencia;
     }
     
     public Luchador estaOcupada() {

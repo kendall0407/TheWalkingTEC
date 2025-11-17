@@ -34,8 +34,9 @@ public class FrameClient extends JFrame {
     private JLabel luchador2;
     private JLabel luchador3;
     
-    public FrameClient() {
-        setTitle("Oceanica");
+    public FrameClient(Client client) {
+        this.client = client;
+        setTitle(client.getCivilizacion().getNombreCivilizacion());
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout(10, 10));
         setPreferredSize(new Dimension(1500, 1000));
@@ -106,7 +107,7 @@ public class FrameClient extends JFrame {
         
         JTextArea txaInstrucciones = new JTextArea(5,5);
         txaInstrucciones.setBorder(BorderFactory.createLineBorder(Color.GRAY));
-        txaInstrucciones.setText("\"Bienvenido al juego! Instrucciones:\n1. Atacar\n2. Poder\n3. Resistencia\n4. Sanar\n5. Consultar estado enemigo");
+        txaInstrucciones.setText("\"Bienvenido al juego! Instrucciones:\n1. Atacar\n2. Consultar estado enemigo\n");
         txaInstrucciones.setFont(new Font("Showcard Gothic", Font.PLAIN, 14));
         txaInstrucciones.setPreferredSize(new Dimension(420, 140));
         //-----------Bitacora y Resultado solo reciben strings, no envian nada---------------
@@ -127,6 +128,12 @@ public class FrameClient extends JFrame {
         txaResultado.setFont(new Font("Showcard Gothic", Font.PLAIN, 14));
         txaResultado.setLineWrap(true);
         txaResultado.setWrapStyleWord(true);
+        new javax.swing.Timer(5000, e -> {
+            txaResultado.setText(""); 
+            }) {{
+                setRepeats(false); 
+                start();
+        }};
         JScrollPane scrollPaneResultado = new JScrollPane(txaResultado);
         scrollPaneResultado.setPreferredSize(new Dimension(250, 120));
         
@@ -271,21 +278,24 @@ public class FrameClient extends JFrame {
         for (int i = 0; i < porcentaje; i++) {
             celdas[j][recorridoPintar].setBackground(color);
             celdas[j][recorridoPintar].ocupar(luchador);
+            luchador.addCeldas(celdas[j][recorridoPintar]);
             j++;
             
             if (j == GRID_COLS){
                 j = 0;
                 recorridoPintar++;
             }
+            
         }
+        
    }
     
     public void agregarBitacora(String msg){ 
-        txaBitacora.append(msg);
+        txaBitacora.append(msg+"\n");
     }
     
     public void agregarEstado(String msg) {
-        txaResultado.append(msg);
+        txaResultado.append(msg+"\n");
     }
     
     public void writeMessage(String msg){
@@ -301,7 +311,7 @@ public class FrameClient extends JFrame {
   
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            FrameClient game = new FrameClient();
+            FrameClient game = new FrameClient(null); //solo para probar como se va viendo
             game.setVisible(true);
         });
         

@@ -29,13 +29,14 @@ public class AssignTargetCommand extends Command implements Serializable {
     public void processInClient(Client client) {
         String idCliente = getParameters()[0];
         String idObjetivo = getParameters()[1];
+        String civilizacion = getParameters()[2];
         client.setIdObjetivo(idObjetivo);
         client.setID(idCliente);
         
         
         // Mostrar mensaje
         String mensaje = "\n";
-        mensaje += "Tu objetivo es la civilizacion: " + idObjetivo + "\n";
+        mensaje += "Tu objetivo es la civilizacion: " + civilizacion +" numero " +idObjetivo+"\n";
         
         client.agregarMensajeBitacora(mensaje);
     }

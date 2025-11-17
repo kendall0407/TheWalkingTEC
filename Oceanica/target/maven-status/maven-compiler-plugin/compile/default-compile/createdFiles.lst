@@ -1,8 +1,9 @@
 Jugador/ClientState.class
-Jugador/FrameClient$1.class
+Models/OwnInfo.class
 Models/AssignTargetCommand.class
+Models/StatusCommand.class
 Jugador/Configuracion$5.class
-Jugador/FrameClient$2.class
+Models/StatusResponseCommand.class
 Jugador/Client$1.class
 ServerPackage/ThreadConnections.class
 Models/AttackCommand.class
