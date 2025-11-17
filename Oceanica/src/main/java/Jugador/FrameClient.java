@@ -29,7 +29,7 @@ public class FrameClient extends JFrame {
     private JPanel bottomPanel;
     private JTextArea txaBitacora;
     private JTextArea txaResultado;
-    
+    private JTextArea txaInstrucciones;
     private JLabel luchador1;
     private JLabel luchador2;
     private JLabel luchador3;
@@ -105,7 +105,7 @@ public class FrameClient extends JFrame {
         });
         btnSend.setPreferredSize(new Dimension(50, 50));
         
-        JTextArea txaInstrucciones = new JTextArea(5,5);
+        txaInstrucciones = new JTextArea(5,5);
         txaInstrucciones.setBorder(BorderFactory.createLineBorder(Color.GRAY));
         txaInstrucciones.setText("\"Bienvenido al juego! Instrucciones:\n1. Atacar\n2. Consultar estado enemigo\n");
         txaInstrucciones.setFont(new Font("Showcard Gothic", Font.PLAIN, 14));
@@ -301,7 +301,10 @@ public class FrameClient extends JFrame {
     public void writeMessage(String msg){
         txaInfo.append(msg + "\n");
     }
-
+    
+    public void agregarInstrucciones(String msg) {
+        txaInstrucciones.append(msg + "\n");
+    }
     public Client getClient() {
         return client;
     }

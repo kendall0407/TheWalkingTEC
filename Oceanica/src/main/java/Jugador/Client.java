@@ -126,7 +126,7 @@ public class Client {
                 luchadorSeleccionado = idx;
                 Habilidad hab = civilizacion.getLuchador(idx).getHabilidad();
 
-                refFrame.agregarEstado(
+                refFrame.agregarInstrucciones(
                     "Ataques disponibles:\n" +
                     "1. " + hab.getAtaqueBase() + "\n" +
                     "2. " + hab.getAtaqueSecundaria() + "\n" +
