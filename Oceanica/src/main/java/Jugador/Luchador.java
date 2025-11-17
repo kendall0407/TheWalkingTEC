@@ -4,6 +4,7 @@
  */
 package Jugador;
 
+import java.awt.Color;
 /**
  *
  * @author kendall-sanabria
@@ -17,6 +18,7 @@ public class Luchador {
     private int sanidad;
     private int resistencia;
     private String direccionImagen;
+    private Color color;
 
     public Luchador(String civilizacion, String nombre, Habilidad habilidad, int representacion, int poder, int sanidad, int resistencia, String direccionImagen) {
         this.civilizacion = civilizacion;
@@ -64,7 +66,13 @@ public class Luchador {
         return direccionImagen;
     }
     
-    
+    public Color getColor() {
+        return color;
+    }
+
+    public void setColor(Color color) {
+        this.color = color;
+    }
     
     
 }

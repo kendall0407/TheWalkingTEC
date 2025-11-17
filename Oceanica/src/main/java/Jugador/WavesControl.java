@@ -11,7 +11,9 @@ package Jugador;
 public class WavesControl extends Habilidad {
 
     public WavesControl( ) {
-
+        this.ataqueBase = "Swirl Raising";
+        this.ataqueSecundaria = "Send Human Garbage";
+        this.ataqueEspecial = "Radioactive Brush";
     }
 
     @Override

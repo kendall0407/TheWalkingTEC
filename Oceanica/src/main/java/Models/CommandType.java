@@ -10,9 +10,13 @@ package Models;
  */
 public enum CommandType {
     ATTACK (4), 
-    MESSAGE (2),
+    MESSAGE (1),
     PRIVATEMESSAGE (3),
-    GIVEUP (1);
+    GIVEUP (1),
+    DEFEND (1),      
+    HEAL (2),        
+    STATUS (2),
+    ASSIGN_TARGET(1);
     
     private int requiredParameters;
     

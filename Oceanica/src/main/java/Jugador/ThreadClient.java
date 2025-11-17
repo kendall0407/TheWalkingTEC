@@ -5,12 +5,13 @@
 package Jugador;
 
 import java.io.IOException;
-
+import Models.Command;
 /**
  *
  * @author kendall-sanabria
  */
 public class ThreadClient extends Thread{
+    //TODO: debe constantemente ver si recibe ataques, enviar atauqes y actualizar info de celdas
     private Client client;
     
     private boolean isRunning = true;
@@ -20,21 +21,29 @@ public class ThreadClient extends Thread{
 
     }
     
+    @Override
     public void run (){
-        //TODO: pasar a object
-        String receivedMessage = "";
+        client.agregarMensajeBitacora("Conectado al servidor\n");
         while (isRunning){
             try {
-                receivedMessage = client.getListener().readUTF(); //espera hasta recibir un String desde el cliente que tiene su socket
-                client.getRefFrame().writeMessage("Cliente recibió: " + receivedMessage);
+                Object obj = client.getListener().readObject();
+                if (obj instanceof Command) { //permite identificar si es de tipo Command, por eso es un Objeto
+                    Command cmd = (Command) obj;
+                    cmd.processInClient(client);
+                }
+
                 //TODO
                 //leer el mensaje, procesarlo ... decidir qué hacer
             } catch (IOException ex) {
                 
+            } catch (ClassNotFoundException ex) {
+                System.getLogger(ThreadClient.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
             }
 
         }
         
     }
+    
+    
   
 }

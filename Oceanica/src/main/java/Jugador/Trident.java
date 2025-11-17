@@ -11,6 +11,9 @@ package Jugador;
 public class Trident extends Habilidad {
 
     public Trident() {
+        this.ataqueBase = "Three Lines";
+        this.ataqueSecundaria = "Three Numbers";
+        this.ataqueEspecial = "Control The Kraken";
     }
 
     @Override

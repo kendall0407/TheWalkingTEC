@@ -33,16 +33,17 @@ public class Civilizacion {
         return nombreCivilizacion;
     }
 
-    public Luchador getLuchador1() {
-        return luchador1;
-    }
-
-    public Luchador getLuchador2() {
-        return luchador2;
-    }
-
-    public Luchador getLuchador3() {
-        return luchador3;
+    public Luchador getLuchador(int num) {
+        switch (num) {
+            case 1:
+                return luchador1;
+            case 2:
+                return luchador2;
+            case 3:
+                return luchador3;
+            default:
+                return null;
+        }
     }
 
     public void setLuchadores(ArrayList<Luchador> luchadores) {

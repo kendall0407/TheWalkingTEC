@@ -11,6 +11,9 @@ package Jugador;
 public class ReleaseKraken extends Habilidad {
 
     public ReleaseKraken() {
+        this.ataqueBase = "Tentaculos";
+        this.ataqueSecundaria = "Kraken Breath";
+        this.ataqueEspecial = "Release The Kraken!";
     }
 
     @Override

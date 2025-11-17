@@ -11,7 +11,9 @@ package Jugador;
 public class ThunderUnderTheSea extends Habilidad {
 
     public ThunderUnderTheSea( ) {
-
+        this.ataqueBase = "Thunder Rain";
+        this.ataqueSecundaria = "Poseidon Thunders";
+        this.ataqueEspecial = "Eel Atack";
     }
 
     @Override

@@ -16,14 +16,16 @@ public class Celda extends JPanel {
     private int columna;
     private String tipo;
     private Luchador ocupada;
-    private Object contenido; // Luchador, obstáculo, etc.
-    
-    public Celda(int fila, int columna) {
+    private Object contenido; // Luchador
+    private FrameClient reframe;
+    private int estado;  // 0 es viva, 1 es muerta
+    public Celda(int fila, int columna, FrameClient reframe) {
         this.fila = fila;
         this.columna = columna;
         this.ocupada = null;
         this.tipo = "vacia";
-        
+        this.reframe = reframe;
+        this.estado = 0;
         setBackground(Color.WHITE);
         setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
         
@@ -36,7 +38,7 @@ public class Celda extends JPanel {
             
             @Override
             public void mouseEntered(MouseEvent e) {
-                setBorder(BorderFactory.createLineBorder(Color.BLUE, 2));
+                setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
             }
             
             @Override
@@ -47,15 +49,32 @@ public class Celda extends JPanel {
     }
     
     public void mostrarInfo() {
-        /* Mostrar
-        % de vida, si está ocupada por volcan o remolino, quién la aniquiló, todos
-        los ataques recibidos, sanidad, escudos, etc. Una bitácora de cada casilla. Por supuesto, jugador a
-        quién pertenece
+        String estado = "";
+        Luchador l = estaOcupada();
+        String luchador = "";
+        if (this.estado ==1) 
+            estado = "Estado: muerta"; 
+        else
+            estado = "Estado: vida -> 100";
+        if (l != null) 
+            luchador = l.getNombre();
+        else
+            luchador = "Celda sin ocupar";
+        this.reframe.agregarEstado("x = "+this.fila+", y = "+this.columna
+        + "\nJugador de civilizacion: " + reframe.getClient().getCivilizacion().getNombreCivilizacion()
+        + estado + "\n" + luchador);
+        /* falta Mostrar
+        quién la aniquiló, todos
+        los ataques recibidos, sanidad, escudos, etc.
         */
         
     }
     
-    
+    public void morir() {
+        //TODO: quien la mato
+        this.estado = 1;
+        setBackground(Color.BLACK);
+    }
     public void ocupar(Luchador luchador) {
         ocupada = luchador;
     }

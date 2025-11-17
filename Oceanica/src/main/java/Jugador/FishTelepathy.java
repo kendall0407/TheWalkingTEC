@@ -11,6 +11,9 @@ package Jugador;
 public class FishTelepathy extends Habilidad {
 
     public FishTelepathy( ) {
+        this.ataqueBase = "Cardumen";
+        this.ataqueSecundaria = "Shark Attack";
+        this.ataqueEspecial = "Pulp";
     }
 
     @Override

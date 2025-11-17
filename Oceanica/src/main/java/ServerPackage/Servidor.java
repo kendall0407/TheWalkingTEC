@@ -4,10 +4,12 @@
  */
 package ServerPackage;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
+import Models.*;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.IOException;
 import java.net.*;
+import java.util.ArrayList;
 
 /**
  *
@@ -16,47 +18,89 @@ import java.net.*;
 public class Servidor {
     private final int PORT = 1509;
     ServerSocket server;
+    private final int maxConections = 4;
     Socket clientesSocket; //Arreglo de clientes.
-    DataOutputStream writer;
-    DataInputStream listener;
+    ObjectOutputStream writer;
+    ObjectInputStream listener;
+    private ArrayList<ThreadServidor> connectedClients; // arreglo de hilos por cada jugador conectado
+    private ThreadConnections connectionsThread;
     
     public Servidor() {
-        
-        
-        
+        connectedClients = new ArrayList<>();
     }
     
     //Levantar el servidor.
     public void conectarServidor(){
         try {
-        server = new ServerSocket(PORT);
+            server = new ServerSocket(PORT);
+            connectionsThread = new ThreadConnections(this);
+            connectionsThread.start();
         } catch (IOException ex){
             
         }
     }
     
-    //Recibir conexión.
-    public void recibirConexion(){
-        int jugadoresContador = 0;
-        System.out.println("Esperando jugadores...");
-        try {
-            clientesSocket = server.accept();
-            writer = new DataOutputStream(clientesSocket.getOutputStream());
-            listener = new DataInputStream(clientesSocket.getInputStream());
-            if (jugadoresContador < 4){
-                System.out.println("Un jugador ha entrado a la sala (" + ++jugadoresContador + "/4)");
-            } else {
-                System.out.println("Sala llena, comenzando la partida...");
+
+    public void broadcast(String msg){      
+        // manda mensajes en los txa de bitacora y status a txaataque del client
+        for (ThreadServidor client : connectedClients) {
+            try {
+                client.sender.writeObject(msg);  
+                client.sender.flush();
+            } catch (IOException ex) {
+                System.err.println("Error enviando mensaje a cliente: " + ex.getMessage());
             }
-        } catch (IOException ex) {
-          
         }
     }
+    
+    
+    public void broadcastCommand(Command cmd){
+        for (ThreadServidor client : connectedClients) {
+            try {
+                client.sender.writeObject(cmd);
+                client.sender.flush();
+            } catch (IOException ex) {
+                System.err.println("Error enviando comando a cliente: " + ex.getMessage());
+            }
+        }
+    }
+    
+    public int elegirObjetivo(int id) {
+        int objetivo = 0;
+        if (id !=3) 
+            objetivo = id++;
+        else
+            objetivo = 0;
+        return objetivo;
+    }
+    
+    public int getMaxConections() {
+        return maxConections;
+    }
+
+    public ArrayList<ThreadServidor> getConnectedClients() {
+        return connectedClients;
+    }
+
+    public ServerSocket getServer() {
+        return server;
+    }
+
+    public Socket getClientesSocket() {
+        return clientesSocket;
+    }
+    
+    public void writeMessage(String msg){
+        System.out.println(msg);
+    }
+
+
+    
+    
     
     public static void main(String[] args) {
         Servidor s = new Servidor();
         s.conectarServidor();
-        s.recibirConexion();
     }
     
     

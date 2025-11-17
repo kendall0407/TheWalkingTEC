@@ -7,20 +7,20 @@ package Models;
 import Jugador.Client;
 import ServerPackage.ThreadServidor;
 import java.io.Serializable;
-import java.util.Arrays;
+
 /**
  *
  * @author josed
  */
 public abstract class Command implements Serializable{
     private CommandType type;
-    private String[] parameters;
+    public String[] parameters;
     private boolean isBroadcast;
     
-        public Command(CommandType type, String[] parameters){
-            this.type = type;
-            this.parameters = parameters;
-        }
+    public Command(CommandType type, String[] parameters){
+        this.type = type;
+        this.parameters = parameters;
+    }
             
     public abstract void processForServer(ThreadServidor threadServidor);
     public abstract void processInClient(Client client);

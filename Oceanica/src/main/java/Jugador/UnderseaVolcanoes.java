@@ -11,6 +11,9 @@ package Jugador;
 public class UnderseaVolcanoes extends Habilidad {
 
     public UnderseaVolcanoes( ) {
+        this.ataqueBase = "Volcano Rising";
+        this.ataqueSecundaria = "Volcano Explosion";
+        this.ataqueEspecial = "Thermal Rush";
 
     }
 

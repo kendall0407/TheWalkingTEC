@@ -11,7 +11,7 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
-import java.net.*;
+import javax.swing.SpinnerListModel;
 
 /**
  *
@@ -19,18 +19,23 @@ import java.net.*;
  */
 public class Configuracion extends javax.swing.JFrame {
     private ArrayList<Luchador> luchadores = new ArrayList<Luchador>();
-    private String nombre;
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Configuracion.class.getName());
     private String direccionImagen;
-    private int contadorCivilizaciones = 0;
     private Client cliente;
+    private Civilizacion civilizacion;
+    private ArrayList<Integer> sanidadUsados = new ArrayList<>();
+    private ArrayList<Integer> resistenciaUsados = new ArrayList<>();
+    private ArrayList<Integer> poderUsados = new ArrayList<>();
+    private int contadorRepresentacion = 0;
     /**
      * Creates new form Configuracion
      */
     public Configuracion() {
         initComponents();
+        setLocationRelativeTo(null);
         imagen();
         btnJugar.setEnabled(false);
+        cargarSpn();
     }
 
     /**
@@ -78,6 +83,11 @@ public class Configuracion extends javax.swing.JFrame {
 
         btnPredeterminados.setFont(new java.awt.Font("URW Bookman", 0, 18)); // NOI18N
         btnPredeterminados.setText("Usar configuración predeterminada");
+        btnPredeterminados.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPredeterminadosActionPerformed(evt);
+            }
+        });
 
         btnCivilizacion.setText("Crear civilización");
         btnCivilizacion.addActionListener(new java.awt.event.ActionListener() {
@@ -109,15 +119,15 @@ public class Configuracion extends javax.swing.JFrame {
 
             lblPoder.setText("Poder");
 
-            spnPoder.setModel(new javax.swing.SpinnerNumberModel(50, 50, 100, 25));
+            spnPoder.setModel(new javax.swing.SpinnerListModel(new String[] {"50", "75", "100"}));
 
             lblResistencia.setText("Resistencia");
 
             lblSanidad.setText("Sanidad");
 
-            spnResistencia.setModel(new javax.swing.SpinnerNumberModel(100, 50, 100, 25));
+            spnResistencia.setModel(new javax.swing.SpinnerListModel(new String[] {"50", "75", "100"}));
 
-            spnSanidad.setModel(new javax.swing.SpinnerNumberModel(75, 50, 100, 25));
+            spnSanidad.setModel(new javax.swing.SpinnerListModel(new String[] {"50", "75", "100"}));
 
             lblRepresentacion.setText("Representación");
 
@@ -142,44 +152,57 @@ public class Configuracion extends javax.swing.JFrame {
                     .addGap(95, 95, 95)
                     .addGroup(pnlFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(pnlFondoLayout.createSequentialGroup()
-                            .addGroup(pnlFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addGroup(pnlFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(lblPoder, javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(lblSanidad))
-                                .addComponent(lblLuchador)
-                                .addComponent(lblRepresentacion))
-                            .addGap(32, 32, 32)
+                            .addGroup(pnlFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(pnlFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addGroup(pnlFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(lblPoder, javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(lblSanidad))
+                                    .addComponent(lblLuchador)
+                                    .addComponent(lblResistencia))
+                                .addGroup(pnlFondoLayout.createSequentialGroup()
+                                    .addGap(14, 14, 14)
+                                    .addComponent(btnCargarImagen)))
                             .addGroup(pnlFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addGroup(pnlFondoLayout.createSequentialGroup()
+                                    .addGap(8, 8, 8)
                                     .addGroup(pnlFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                         .addGroup(pnlFondoLayout.createSequentialGroup()
-                                            .addComponent(txfLuchador, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 249, Short.MAX_VALUE)
-                                            .addComponent(lblHabilidad))
-                                        .addGroup(pnlFondoLayout.createSequentialGroup()
-                                            .addGap(0, 0, Short.MAX_VALUE)
                                             .addGroup(pnlFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                                .addComponent(lblNombreC)
-                                                .addComponent(btnAgregarLuchador)
                                                 .addGroup(pnlFondoLayout.createSequentialGroup()
-                                                    .addGroup(pnlFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                                        .addComponent(lblResistencia)
-                                                        .addComponent(btnCargarImagen))
-                                                    .addGap(20, 20, 20)))))
-                                    .addGap(46, 46, 46)
-                                    .addGroup(pnlFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addGroup(pnlFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                            .addComponent(boxHabilidad, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addComponent(spnResistencia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(txfNombreC))
-                                        .addComponent(lblImagen))
-                                    .addGap(126, 126, 126))
+                                                    .addGroup(pnlFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                        .addGroup(pnlFondoLayout.createSequentialGroup()
+                                                            .addGroup(pnlFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                                                .addGroup(pnlFondoLayout.createSequentialGroup()
+                                                                    .addComponent(txfLuchador, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 249, Short.MAX_VALUE)
+                                                                    .addComponent(lblHabilidad))
+                                                                .addGroup(pnlFondoLayout.createSequentialGroup()
+                                                                    .addGap(0, 0, Short.MAX_VALUE)
+                                                                    .addComponent(lblNombreC)))
+                                                            .addGap(46, 46, 46))
+                                                        .addGroup(pnlFondoLayout.createSequentialGroup()
+                                                            .addComponent(spnResistencia)
+                                                            .addGap(424, 424, 424)))
+                                                    .addGroup(pnlFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                        .addGroup(pnlFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                                            .addComponent(boxHabilidad, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                            .addComponent(txfNombreC))
+                                                        .addComponent(lblImagen)))
+                                                .addGroup(pnlFondoLayout.createSequentialGroup()
+                                                    .addGap(370, 370, 370)
+                                                    .addComponent(lblRepresentacion)
+                                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                    .addComponent(spnRepresentacion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                            .addGap(126, 126, 126))
+                                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, pnlFondoLayout.createSequentialGroup()
+                                            .addGroup(pnlFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                                .addComponent(spnPoder, javax.swing.GroupLayout.DEFAULT_SIZE, 79, Short.MAX_VALUE)
+                                                .addComponent(spnSanidad))
+                                            .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                                 .addGroup(pnlFondoLayout.createSequentialGroup()
-                                    .addGroup(pnlFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(spnSanidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(spnPoder, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(spnRepresentacion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                                    .addGap(319, 319, 319)
+                                    .addComponent(btnAgregarLuchador)
+                                    .addContainerGap())))
                         .addGroup(pnlFondoLayout.createSequentialGroup()
                             .addComponent(btnCivilizacion)
                             .addGap(0, 0, Short.MAX_VALUE))
@@ -204,27 +227,28 @@ public class Configuracion extends javax.swing.JFrame {
                         .addComponent(lblHabilidad)
                         .addComponent(boxHabilidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGap(18, 18, 18)
-                    .addGroup(pnlFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(spnPoder, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(lblResistencia)
-                        .addComponent(spnResistencia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(lblPoder))
-                    .addGap(18, 18, 18)
+                    .addGroup(pnlFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(pnlFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(spnPoder, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblPoder))
+                        .addGroup(pnlFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(spnRepresentacion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblRepresentacion)))
+                    .addGap(24, 24, 24)
                     .addGroup(pnlFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addComponent(lblSanidad)
                         .addGroup(pnlFondoLayout.createSequentialGroup()
                             .addComponent(spnSanidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGap(21, 21, 21)
                             .addGroup(pnlFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(btnCargarImagen)
-                                .addComponent(lblImagen))
-                            .addGap(3, 3, 3)
-                            .addGroup(pnlFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(lblRepresentacion)
-                                .addComponent(spnRepresentacion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addGap(32, 32, 32)
-                    .addComponent(btnAgregarLuchador)
-                    .addGap(28, 28, 28)
+                                .addComponent(lblImagen)
+                                .addComponent(lblResistencia)
+                                .addComponent(spnResistencia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGap(37, 37, 37)
+                    .addGroup(pnlFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btnCargarImagen)
+                        .addComponent(btnAgregarLuchador))
+                    .addGap(50, 50, 50)
                     .addGroup(pnlFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(btnJugar, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(btnPredeterminados, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -250,12 +274,20 @@ public class Configuracion extends javax.swing.JFrame {
     private void btnCivilizacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCivilizacionActionPerformed
         if (luchadores.size() !=  3){
             JOptionPane.showMessageDialog(null, "Te faltan mas luchadores, apenas llevas: " + luchadores.size());
-        } else if (contadorCivilizaciones >= 4){
-            JOptionPane.showMessageDialog(null, "Ya no puedes agregar mas civilizaciones, ya llevas 4");
+        } else if (this.contadorRepresentacion > 100 || this.contadorRepresentacion < 100) {
+            JOptionPane.showMessageDialog(null, "Error, la representacion esta incorrecta: " + this.contadorRepresentacion + " Por favor hazlos de nuevo");
+            luchadores.clear();
+            txfNombreC.setText("");
+            contadorRepresentacion = 0;
+            this.direccionImagen = "";
+            sanidadUsados.clear();
+            resistenciaUsados.clear();
+            poderUsados.clear();
+            cargarSpn();
         } else {
             String nombreCivilizacion =txfNombreC.getText();
-            Civilizacion civilizacion = new Civilizacion(nombreCivilizacion, luchadores.get(0), luchadores.get(1), luchadores.get(2));
-            contadorCivilizaciones++;
+            this.civilizacion = new Civilizacion(nombreCivilizacion, luchadores.get(0), luchadores.get(1), luchadores.get(2));
+            civilizacion.setLuchadores(luchadores);
             cliente = new Client(civilizacion);
             btnJugar.setEnabled(true);
         }
@@ -271,34 +303,93 @@ public class Configuracion extends javax.swing.JFrame {
         if (luchadores.size() < 3){
             if (txfLuchador.getText().isEmpty() || txfNombreC.getText().isEmpty()){
                 JOptionPane.showMessageDialog(null, "Por favor ingresa un nombre");
-            } else{
+                
+            } else if (direccionImagen.isEmpty()|| direccionImagen == null){
+                JOptionPane.showMessageDialog(null, "Por favor carga una imagen");
+                
+            } else {                
                 String nombreLuchador = txfLuchador.getText();
                 String nombreCivilizacion =txfNombreC.getText();
                 Habilidad habilidadSeleccionada = (Habilidad) boxHabilidad.getSelectedItem();
-                int poder = (int)spnPoder.getValue();
-                int sanidad = (int)spnSanidad.getValue();
-                int resistencia = (int)spnResistencia.getValue();
-                int representacion = (int)spnRepresentacion.getValue();
                 
-                //TODO: obtener la direccion de imagen y agregarla al instanciar luchador
-                //TODO: lograr la vara de repetidos en los numeros, deshabilitarlos
-                
-                System.out.println(nombreLuchador + "\n" + habilidadSeleccionada.getNombre() + "\n");
-                System.out.println("\n" + poder + "\n" + sanidad + "\n" + resistencia+  "\n"+representacion);
-                luchadores.add(new Luchador(nombreCivilizacion, nombreLuchador, habilidadSeleccionada, representacion, poder, sanidad, resistencia, direccionImagen));
+                int poder = Integer.parseInt(spnPoder.getValue().toString());
+                int sanidad = Integer.parseInt(spnSanidad.getValue().toString());
+                int resistencia = Integer.parseInt(spnResistencia.getValue().toString());
+                if (sanidadUsados.size() != 1) {
+                    eliminarElemento(poderUsados, poder);
+                    SpinnerListModel modelP = new SpinnerListModel(poderUsados);
+                    spnPoder.setModel(modelP);
 
+
+                    System.out.println("" + sanidad);
+                    eliminarElemento(sanidadUsados, sanidad);
+                    SpinnerListModel modelS = new SpinnerListModel(sanidadUsados);
+                    spnSanidad.setModel(modelS);
+
+
+                    System.out.println("" + resistencia);
+                    eliminarElemento(resistenciaUsados, resistencia);
+                    SpinnerListModel modelR = new SpinnerListModel(resistenciaUsados);
+                    spnResistencia.setModel(modelR);
+                } 
+                
+                int representacion = (int)spnRepresentacion.getValue();
+                    this.contadorRepresentacion += representacion;
+                
+                if (contadorRepresentacion > 100) {
+                    JOptionPane.showMessageDialog(null, "La representacion de los luchadores no esta correcta! Por favor crealos de nuevo");
+                    luchadores.clear();
+                    txfNombreC.setText("");
+                    contadorRepresentacion = 0;
+                    this.direccionImagen = "";
+                    sanidadUsados.clear();
+                    resistenciaUsados.clear();
+                    poderUsados.clear();
+                    cargarSpn();
+                    return;
+                }
+                luchadores.add(new Luchador(nombreCivilizacion, 
+                        nombreLuchador, habilidadSeleccionada, 
+                        representacion, poder, sanidad, 
+                        resistencia, direccionImagen));
+                this.direccionImagen = "";
             }
-        }
-        
-        else {
-            JOptionPane.showMessageDialog(null, "Ya llevas 3 luchadores, en esta civilizacion no puedes meter mas\nCrea otra");
+        } else {
+            JOptionPane.showMessageDialog(null, "Ya llevas 3 luchadores, en esta civilizacion no puedes meter mas\n");
         }
     }//GEN-LAST:event_btnAgregarLuchadorActionPerformed
 
+    private void eliminarElemento(ArrayList<Integer> lista, int elemento) {
+        for (int i = 0; i < lista.size(); i++) {
+            if (lista.get(i) == elemento) {
+                lista.remove(i);
+            }
+        }
+    }
+    private void btnPredeterminadosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPredeterminadosActionPerformed
+        //cargar luchadores y civilizacion mas rapido
+        //String civilizacion, String nombre, Habilidad habilidad, int representacion, int poder, int sanidad, int resistencia, String direccionImagen
+
+        Luchador luchador1 = new Luchador("Ateneida","Zeus", new ReleaseKraken(), 50, 100, 75, 50, getClass().getResource("/images/zeus.png").getPath());
+        Luchador luchador2 = new Luchador("Ateneida","Poseidon", new Trident(), 20, 50, 100, 50, getClass().getResource("/images/poseidon.png").getPath());
+        Luchador luchador3 = new Luchador("Ateneida","Kratos", new UnderseaVolcanoes(), 30, 75, 100, 75, getClass().getResource("/images/kratos.png").getPath());
+        luchadores.add(luchador1);
+        luchadores.add(luchador2);
+        luchadores.add(luchador3);
+        
+        this.civilizacion = new Civilizacion("Ateneida", luchador1, luchador2, luchador3);
+        civilizacion.setLuchadores(luchadores);
+        cliente = new Client(civilizacion);
+        cliente.connect();
+        dispose();
+    }//GEN-LAST:event_btnPredeterminadosActionPerformed
+
     private void btnJugarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnJugarActionPerformed
         cliente.connect();
-    }
-       
+        dispose();
+    }//GEN-LAST:event_btnJugarActionPerformed
+
+
     private void imagen(){
         btnCargarImagen.addActionListener(e -> {
         JFileChooser fileChooser = new JFileChooser();
@@ -323,6 +414,21 @@ public class Configuracion extends javax.swing.JFrame {
         }
         
         });
+    }
+    
+    
+    private void cargarSpn() {
+        sanidadUsados.add(50);
+        sanidadUsados.add(75);
+        sanidadUsados.add(100);
+        
+        poderUsados.add(50);
+        poderUsados.add(75);
+        poderUsados.add(100);
+        
+        resistenciaUsados.add(50);
+        resistenciaUsados.add(75);
+        resistenciaUsados.add(100);
     }
     /**
      * @param args the command line arguments
