@@ -81,7 +81,7 @@ public class WavesGUI extends JFrame {
     }
     
     public void abrirOpcionFrame(Client client, String tipo) {
-        AtaqueSimpleFrame atacar = new AtaqueSimpleFrame(client,tipo);
+        ObjetivoFrame atacar = new ObjetivoFrame(client,tipo);
         atacar.setVisible(true);
     }
 

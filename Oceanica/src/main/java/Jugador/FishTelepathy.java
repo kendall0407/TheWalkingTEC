@@ -4,6 +4,8 @@
  */
 package Jugador;
 
+import java.util.concurrent.ThreadLocalRandom;
+
 /**
  *
  * @author kendall-sanabria
@@ -19,13 +21,13 @@ public class FishTelepathy extends Habilidad {
 
     @Override
     public void ataqueBase(int x, int y, Celda[][] celdas) {
-        
-        int numero = (int)(Math.random() * 201) + 100;  // 100–300
-        int distribuido = (int)(Math.random() * (numero + 1));  // 0–numero
+
+        int numero = ThreadLocalRandom.current().nextInt(100, 301); // 100–300
+        int distribuido = ThreadLocalRandom.current().nextInt(0, numero);
         int dano = 33*distribuido;
         for (int i = 0; i < numero; i++) {
-            x = (int)(Math.random() * 20);
-            y = (int)(Math.random() * 20);
+            x = ThreadLocalRandom.current().nextInt(0, 20);
+            y = ThreadLocalRandom.current().nextInt(0, 20);
             celdas[x][y].dano(dano);
         }
     }
@@ -36,13 +38,13 @@ public class FishTelepathy extends Habilidad {
         int[][] esquinas = {
             {0, 0}, {19, 0}, {0, 19}, {19, 19}
         };
-        int idx = (int)(Math.random() * 4);
+        int idx = ThreadLocalRandom.current().nextInt(0, 4); 
 
         x = esquinas[idx][0];
         y = esquinas[idx][1];
 
         // rango a destruir
-        int n = (int)(Math.random() * 10) + 1; // 1–10
+        int n = ThreadLocalRandom.current().nextInt(1, 11); // 1–10
 
         // Determinar dirección según esquina
         int dx = 0;
@@ -76,7 +78,7 @@ public class FishTelepathy extends Habilidad {
         int columnas = 20;
 
         //enerar entre 20 y 50 pulpos
-        int numeroPulpos = (int)(Math.random() * (50 - 20 + 1)) + 20;
+        int numeroPulpos = ThreadLocalRandom.current().nextInt(20, 51);
 
         int tentaculosPorPulpo = 8;
 
@@ -86,8 +88,8 @@ public class FishTelepathy extends Habilidad {
         //cada pulpo genera sus tentáculos
         for (int p = 0; p < numeroPulpos; p++) {
             for (int t = 0; t < tentaculosPorPulpo; t++) {
-                x = (int)(Math.random() * filas);    // 0–19
-                y = (int)(Math.random() * columnas); // 0–19
+                x = ThreadLocalRandom.current().nextInt(0, filas);    // 0–19
+                y = ThreadLocalRandom.current().nextInt(0, filas);  // 0–19
 
                 contador[x][y]++;             // contar tentáculos en la celda
                 celdas[x][y].dano(25);       // cada tentáculo daña 25%

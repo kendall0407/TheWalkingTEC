@@ -11,6 +11,8 @@ package Jugador;
 
 import Models.AttackCommand;
 import java.awt.*;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import javax.swing.*;
 
 public class ObjetivoFrame extends JFrame {
@@ -77,6 +79,15 @@ public class ObjetivoFrame extends JFrame {
             String[] informationCmnd = {idA, civ, this.tipo, "1", "1"};
             
             AttackCommand cmd = new AttackCommand(informationCmnd);
+            
+            ObjectOutputStream sender = this.client.getSender();
+            try {
+                sender.writeObject(cmd);
+                sender.flush();
+            } catch (IOException ex) {
+                System.out.println("Error enviando STATUS");
+            }
+            
             dispose();
         });
 

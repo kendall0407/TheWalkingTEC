@@ -5,6 +5,7 @@
 package Jugador;
 
 import java.util.ArrayList;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  *
@@ -25,11 +26,17 @@ public class UnderseaVolcanoes extends Habilidad {
     public void ataqueBase(int x, int y, Celda[][] celdas) {
         int dano = 100;
 
-        int numero = (int)(Math.random() * 10) + 1;
-        if (x>0 && x <19-numero && y > 0 && y < 19-numero) {
-            for (int i = 0; i < numero; i++){
-                for (int j = 0; j < numero; j++) {
-                    celdas[i][j].dano(dano);
+        int numero = ThreadLocalRandom.current().nextInt(1, 11);
+
+        if (x >= 0 && x + numero < celdas.length && 
+            y >= 0 && y + numero < celdas[0].length) {
+
+            for (int i = 0; i < numero/2; i++){
+                for (int j = 0; j < numero/2; j++) {
+                    celdas[x + i][y + j].dano(dano);
+                    celdas[x - i][y - j].dano(dano);
+                    celdas[x + i][y - j].dano(dano);
+                    celdas[x - i][y + j].dano(dano);
                 }
             }
         }

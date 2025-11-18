@@ -5,6 +5,7 @@
 package Jugador;
 
 import java.util.ArrayList;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  *
@@ -31,7 +32,7 @@ public class WavesControl extends Habilidad {
         int filas = 20;       
         int columnas = 20; 
 
-        int casillas = (int)(Math.random() * (10 - 2 + 1)) + 2; // 2–10 casillas
+        int casillas = ThreadLocalRandom.current().nextInt(2, 11); // 2–10 casillas
         int dano = 100;
 
         // Definir rango de la onda alrededor del punto (x, y)
@@ -58,8 +59,8 @@ public class WavesControl extends Habilidad {
     public void ataqueSecundario(int x, int y, Celda[][] celdas) {
         int dano = 25;
         for (int i = 0; i<10; i++) {
-            int puntoX = (int)(Math.random() * 20);
-            int puntoY = (int)(Math.random() * 20);
+            int puntoX = ThreadLocalRandom.current().nextInt(1, 20);
+            int puntoY = ThreadLocalRandom.current().nextInt(1, 20);
             celdas[puntoX][puntoY].dano(dano);
             celdasBasuras.add(celdas[puntoX][puntoY]);
         }
@@ -68,7 +69,7 @@ public class WavesControl extends Habilidad {
     @Override
     public void ataqueEspecial(int x, int y, Celda[][] celdas) {
         int dano = 10; //x segundo
-        int segundos = (int)(Math.random() * 10)+1;
+        int segundos = ThreadLocalRandom.current().nextInt(1, 11);
         for (int i = 0; i < celdasBasuras.size(); i++){
             celdasBasuras.get(i).dano(dano*segundos);
         }

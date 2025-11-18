@@ -14,6 +14,9 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import Models.AttackCommand;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 
 public class AtaqueSimpleFrame extends JFrame {
 
@@ -121,6 +124,13 @@ public class AtaqueSimpleFrame extends JFrame {
             String[] informationCmnd = {idA, civ, this.tipo, x, y};
             
             AttackCommand cmd = new AttackCommand(informationCmnd);
+            ObjectOutputStream sender = this.client.getSender();
+            try {
+                sender.writeObject(cmd);
+                sender.flush();
+            } catch (IOException ex) {
+                System.out.println("Error enviando STATUS");
+            }
             
             dispose();
         });

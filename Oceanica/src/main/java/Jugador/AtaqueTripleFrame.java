@@ -6,6 +6,8 @@ package Jugador;
 
 import Models.AttackCommand;
 import java.awt.*;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import javax.swing.*;
 import javax.swing.event.ChangeListener;
 
@@ -127,6 +129,15 @@ public class AtaqueTripleFrame extends JFrame {
                 String[] informationCmnd = {idA, civ, this.tipo, valoresX[i], valoresY[i]};
             
                 AttackCommand cmd = new AttackCommand(informationCmnd);
+                
+                ObjectOutputStream sender = this.client.getSender();
+            try {
+                sender.writeObject(cmd);
+                sender.flush();
+            } catch (IOException ex) {
+                System.out.println("Error enviando STATUS");
+            }
+            
             }
             
             dispose();

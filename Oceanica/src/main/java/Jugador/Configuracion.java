@@ -371,7 +371,7 @@ public class Configuracion extends javax.swing.JFrame {
         //String civilizacion, String nombre, Habilidad habilidad, int representacion, int poder, int sanidad, int resistencia, String direccionImagen
 
         Luchador luchador1 = new Luchador("Ateneida","Zeus", new ReleaseKraken(), 50, 100, 75, 50, getClass().getResource("/images/zeus.png").getPath());
-        Luchador luchador2 = new Luchador("Ateneida","Poseidon", new Trident(), 20, 50, 100, 50, getClass().getResource("/images/poseidon.png").getPath());
+        Luchador luchador2 = new Luchador("Ateneida","Poseidon", new FishTelepathy(), 20, 50, 100, 50, getClass().getResource("/images/poseidon.png").getPath());
         Luchador luchador3 = new Luchador("Ateneida","Kratos", new UnderseaVolcanoes(), 30, 75, 100, 75, getClass().getResource("/images/kratos.png").getPath());
         luchadores.add(luchador1);
         luchadores.add(luchador2);

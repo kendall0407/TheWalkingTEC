@@ -4,6 +4,8 @@
  */
 package Jugador;
 
+import java.util.concurrent.ThreadLocalRandom;
+
 /**
  *
  * @author kendall-sanabria
@@ -19,7 +21,7 @@ public class Trident extends Habilidad {
 
     @Override
     public void ataqueBase(int x, int y, Celda[][] celdas) {
-        int direccion = (int)(Math.random() * 3) + 1;
+        int direccion = ThreadLocalRandom.current().nextInt(1, 5);
         int dano = 100;
         switch (direccion) {
             case 1: //izquierda
