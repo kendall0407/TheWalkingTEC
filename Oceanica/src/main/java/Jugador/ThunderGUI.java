@@ -13,12 +13,14 @@ import java.awt.event.*;
 import javax.swing.*;
 
 public class ThunderGUI extends JFrame {
+    private Client client;
 
-    public ThunderGUI() {
+    public ThunderGUI(Client clientC) {
+        this.client = clientC;
         setTitle("ThunderMoveSet");
         setSize(420, 350);
         setLocationRelativeTo(null);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         // Fondo morado pastel
         getContentPane().setBackground(new Color(200, 160, 220));
@@ -40,6 +42,11 @@ public class ThunderGUI extends JFrame {
         JButton btnRain = crearBoton("Thunder Rain");
         JButton btnPoseidon = crearBoton("Poseidon's Thunder");
         JButton btnEel = crearBoton("Eel Attack");
+        
+        btnRain.addActionListener(e -> abrirOpcionFrame(this.client,"12"));
+        btnPoseidon.addActionListener(e -> abrirOpcionFrame(this.client,"13"));
+        btnEel.addActionListener(e -> abrirOpcionFrame(this.client,"14"));
+        
 
         // Agregar botones al panel
         panelBotones.add(btnRain);
@@ -71,7 +78,8 @@ public class ThunderGUI extends JFrame {
         return btn;
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new ThunderGUI().setVisible(true));
+    public void abrirOpcionFrame(Client client, String tipo) {
+        AtaqueSimpleFrame atacar = new AtaqueSimpleFrame(client,tipo);
+        atacar.setVisible(true);
     }
 }

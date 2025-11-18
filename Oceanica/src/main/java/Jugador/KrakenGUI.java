@@ -13,12 +13,14 @@ import java.awt.event.*;
 import javax.swing.*;
 
 public class KrakenGUI extends JFrame {
+    private Client client;
 
-    public KrakenGUI() {
+    public KrakenGUI(Client clientC) {
+        this.client = clientC;
         setTitle("Kraken MoveSet");
         setSize(400, 350);
         setLocationRelativeTo(null);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         // Fondo verde pastel
         getContentPane().setBackground(new Color(152, 251, 152));
@@ -40,6 +42,11 @@ public class KrakenGUI extends JFrame {
         JButton btnBreath = crearBoton("Kraken's Breath");
         JButton btnRelease = crearBoton("Release the Kraken");
 
+        // --- ACCIONES ---
+        btnBreath.addActionListener(e -> abrirAtacarFrame(this.client,"1"));
+        btnRelease.addActionListener(e -> abrirAtacarFrame(this.client,"2"));
+        btnTentacles.addActionListener(e -> abrirAtacarTripleFrame(this.client,"0"));
+
         // Agregar al panel
         panelBotones.add(btnTentacles);
         panelBotones.add(btnBreath);
@@ -49,7 +56,7 @@ public class KrakenGUI extends JFrame {
         add(panelBotones, BorderLayout.CENTER);
     }
 
-    // Método para crear botones grises con hover oscuro
+    // Método para crear botones
     private JButton crearBoton(String texto) {
         JButton btn = new JButton(texto);
 
@@ -75,7 +82,16 @@ public class KrakenGUI extends JFrame {
         return btn;
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new KrakenGUI().setVisible(true));
+   
+    public void abrirAtacarFrame(Client client, String tipo) {
+        AtaqueSimpleFrame atacar = new AtaqueSimpleFrame(client,tipo);
+        atacar.setVisible(true);
     }
+    
+    public void abrirAtacarTripleFrame(Client client, String tipo){
+        AtaqueTripleFrame atacar = new AtaqueTripleFrame(client, tipo);
+        atacar.setVisible(true);
+    }
+    
+    
 }

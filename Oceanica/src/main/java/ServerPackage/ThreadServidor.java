@@ -10,8 +10,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import Models.Command;
-import Models.OwnInfo;
+import Models.*;
 /**
  *
  * @author josed
@@ -56,7 +55,7 @@ public class ThreadServidor extends Thread{
             
             if (first instanceof OwnInfo own) {
                 own.processForServer(this);
-                server.writeMessage("Civilización del jugador " + idJugador + " recibida.");
+                server.writeMessage("Civilizacion del jugador " + idJugador + " recibida.");
             }
             while (isRunning) {
                 try {
@@ -193,6 +192,22 @@ public class ThreadServidor extends Thread{
         return idJugador;
     }
     
+    public void recibirAtaque(int x, int y, int atacante, int tipoAtaque){
+        String[] params = { 
+            Integer.toString(x), 
+            Integer.toString(y),
+            Integer.toString(atacante),
+            Integer.toString(tipoAtaque),
+            this.getServer().getConnection(atacante).getCivilizacion()
+        };
+        ReceiveAttackCommand cmd = new ReceiveAttackCommand(CommandType.RECEIVEATTACK, params);
+        try {
+            sender.writeObject(cmd);
+            sender.flush();
+        } catch (IOException ex) {
+            server.writeMessage("Error recibiendo ataque");
+        } 
+    }
     
     
 }

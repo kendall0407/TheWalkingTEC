@@ -9,7 +9,8 @@ package Models;
  * @author josed
  */
 public enum CommandType {
-    ATTACK (4), 
+    ATTACK (5), 
+    RECEIVEATTACK (5),
     MESSAGE (1),
     PRIVATEMESSAGE (3),
     GIVEUP (1),

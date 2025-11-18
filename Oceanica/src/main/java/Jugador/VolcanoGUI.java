@@ -13,12 +13,14 @@ import java.awt.event.*;
 import javax.swing.*;
 
 public class VolcanoGUI extends JFrame {
+    private Client client;
 
-    public VolcanoGUI() {
+    public VolcanoGUI(Client clientC) {
+        this.client = clientC;
         setTitle("VolcanoMoveSet");
         setSize(420, 350);
         setLocationRelativeTo(null);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         // Fondo café rojizo muy oscuro
         getContentPane().setBackground(new Color(60, 20, 10)); 
@@ -40,6 +42,10 @@ public class VolcanoGUI extends JFrame {
         JButton btnRising = crearBoton("Volcano Rising");
         JButton btnExplosion = crearBoton("Volcano Explosion");
         JButton btnThermal = crearBoton("Thermal Rush");
+        
+        btnRising.addActionListener(e -> abrirAtacarFrame(this.client,"9"));
+        btnExplosion.addActionListener(e -> abrirOpcionFrame(this.client,"10"));
+        btnThermal.addActionListener(e -> abrirOpcionFrame(this.client,"11"));
 
         // Agregar botones
         panelBotones.add(btnRising);
@@ -69,8 +75,16 @@ public class VolcanoGUI extends JFrame {
 
         return btn;
     }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new VolcanoGUI().setVisible(true));
+    
+    public void abrirAtacarFrame(Client client, String tipo) {
+        AtaqueSimpleFrame atacar = new AtaqueSimpleFrame(client,tipo);
+        atacar.setVisible(true);
     }
+    
+    public void abrirOpcionFrame(Client client, String tipo) {
+        AtaqueSimpleFrame atacar = new AtaqueSimpleFrame(client,tipo);
+        atacar.setVisible(true);
+    }
+
+
 }

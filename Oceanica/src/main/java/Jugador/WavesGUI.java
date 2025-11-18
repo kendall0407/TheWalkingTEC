@@ -13,12 +13,14 @@ import java.awt.event.*;
 import javax.swing.*;
 
 public class WavesGUI extends JFrame {
+    private Client client;
 
-    public WavesGUI() {
+    public WavesGUI(Client clientC) {
+        this.client = clientC;
         setTitle("WavesMoveSet");
         setSize(420, 350);
         setLocationRelativeTo(null);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         // Fondo azul pastel
         getContentPane().setBackground(new Color(150, 200, 255));
@@ -40,6 +42,10 @@ public class WavesGUI extends JFrame {
         JButton btnSwirl = crearBoton("Swirl Raising");
         JButton btnGarbage = crearBoton("Human Garbage");
         JButton btnRadioactive = crearBoton("Radioactive Rush");
+        
+        btnSwirl.addActionListener(e -> abrirAtacarFrame(this.client,"15"));
+        btnGarbage.addActionListener(e -> abrirOpcionFrame(this.client,"16"));
+        btnRadioactive.addActionListener(e -> abrirOpcionFrame(this.client,"17"));
 
         panelBotones.add(btnSwirl);
         panelBotones.add(btnGarbage);
@@ -68,9 +74,17 @@ public class WavesGUI extends JFrame {
 
         return btn;
     }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new WavesGUI().setVisible(true));
+    
+    public void abrirAtacarFrame(Client client, String tipo) {
+        AtaqueSimpleFrame atacar = new AtaqueSimpleFrame(client,tipo);
+        atacar.setVisible(true);
     }
+    
+    public void abrirOpcionFrame(Client client, String tipo) {
+        AtaqueSimpleFrame atacar = new AtaqueSimpleFrame(client,tipo);
+        atacar.setVisible(true);
+    }
+
+
 }
 

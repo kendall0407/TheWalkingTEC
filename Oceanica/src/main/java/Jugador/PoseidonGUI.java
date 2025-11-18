@@ -13,12 +13,14 @@ import java.awt.event.*;
 import javax.swing.*;
 
 public class PoseidonGUI extends JFrame {
+    private Client client;
 
-    public PoseidonGUI() {
+    public PoseidonGUI(Client clientC) {
+        this.client = clientC;
         setTitle("PoseidonMoveSet");
         setSize(420, 350);
         setLocationRelativeTo(null);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         // Fondo azul oscuro
         getContentPane().setBackground(new Color(10, 20, 60));
@@ -41,6 +43,10 @@ public class PoseidonGUI extends JFrame {
         JButton btnLines = crearBoton("Three Lines");
         JButton btnKrakenAlpha = crearBoton("Kraken's Alpha");
 
+        btnNumbers.addActionListener(e -> abrirSorteoTriple(this.client));
+        btnKrakenAlpha.addActionListener(e -> abrirOpcionFrame(this.client,"5"));
+        btnLines.addActionListener(e -> abrirAtacarTripleFrame(this.client,"4"));
+        
         // Agregar al panel
         panelBotones.add(btnNumbers);
         panelBotones.add(btnLines);
@@ -71,7 +77,19 @@ public class PoseidonGUI extends JFrame {
         return btn;
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new PoseidonGUI().setVisible(true));
+    public void abrirOpcionFrame(Client client, String tipo) {
+        AtaqueSimpleFrame atacar = new AtaqueSimpleFrame(client,tipo);
+        atacar.setVisible(true);
     }
+    
+    public void abrirAtacarTripleFrame(Client client, String tipo){
+        AtaqueTripleFrame atacar = new AtaqueTripleFrame(client, tipo);
+        atacar.setVisible(true);
+    }
+    
+    public void abrirSorteoTriple(Client client){
+        SorteoTripleFrame sorteo = new SorteoTripleFrame(client);
+        sorteo.setVisible(true);
+    }
+    
 }

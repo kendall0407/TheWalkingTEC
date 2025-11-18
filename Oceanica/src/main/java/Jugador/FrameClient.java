@@ -22,7 +22,7 @@ public class FrameClient extends JFrame {
     private int recorridoPintar = 0;
     private Client client;
     
-    private Celda[][] celdas;
+    private Celda[][] celdas;   
     private JTextArea txaInfo;
     private JPanel rightPanel;
     private JPanel gridPanel;
@@ -309,7 +309,9 @@ public class FrameClient extends JFrame {
         return client;
     }
     
-    
+    public Celda[][] getCeldas() {
+        return celdas;
+    }
     
   
     public static void main(String[] args) {

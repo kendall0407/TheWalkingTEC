@@ -19,9 +19,10 @@ public abstract class Habilidad {
     }
 
     //metodos de ataque que todos tienen
-    public abstract void ataqueBase();
-    public abstract void ataqueSecundario();
-    public abstract void ataqueEspecial();
+    public abstract void ataqueBase(int x, int y, Celda[][] celdas);
+    public abstract void ataqueSecundario(int x, int y, Celda[][] celdas);
+    public abstract void ataqueEspecial(int x, int y, Celda[][] celdas);
+    public abstract void desplegarMenu(Client client);
 
     public String getNombre() {
         return nombre;

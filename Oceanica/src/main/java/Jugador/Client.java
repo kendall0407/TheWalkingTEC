@@ -36,6 +36,7 @@ public class Client {
     private ClientState currentState = ClientState.WAITING_ACTION;
     private int luchadorSeleccionado = -1;
     private int ataque;
+    
     public Client(Civilizacion civilizacion) {
         this.civilizacion = civilizacion;
         
@@ -125,7 +126,8 @@ public class Client {
                 int idx = Integer.parseInt(msg);
                 luchadorSeleccionado = idx;
                 Habilidad hab = civilizacion.getLuchador(idx).getHabilidad();
-
+                hab.desplegarMenu(this);
+                
                 refFrame.agregarInstrucciones(
                     "Ataques disponibles:\n" +
                     "1. " + hab.getAtaqueBase() + "\n" +
@@ -222,5 +224,34 @@ public class Client {
     public void setID(String id) {
         this.ID = Integer.parseInt(id);
         refFrame.agregarBitacora("Eres el jugador J" + id);
+    }
+    
+    public void recibirDano(int x, int y, int atacante, int tipoAtaque) {
+        Habilidad[] habilidades = {
+            new ReleaseKraken(),
+            new Trident(),
+            new FishTelepathy(),
+            new UnderseaVolcanoes(),
+            new ThunderUnderTheSea(),
+            new WavesControl()
+        };
+
+        int indiceHabilidad = tipoAtaque / 3;  // 0-2 -> 0, 3-5 -> 1, ... 15-17 -> 5
+        int indiceAtaque = tipoAtaque % 3;     // 0=base, 1=secundario, 2=especial
+
+        Habilidad h = habilidades[indiceHabilidad];
+        Celda[][] celdas = refFrame.getCeldas();
+
+        switch (indiceAtaque) {
+            case 0 -> h.ataqueBase(x, y, celdas);
+            case 1 -> h.ataqueSecundario(x, y, celdas);
+            case 2 -> h.ataqueEspecial(x, y, celdas);
+        }
+
+        //actualizar celdas y la representacion segun celdas muertas
+    }
+    
+    public String getID(){
+        return Integer.toString(this.ID);
     }
 }

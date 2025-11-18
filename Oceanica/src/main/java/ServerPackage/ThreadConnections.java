@@ -17,6 +17,7 @@ public class ThreadConnections extends Thread {
 
     private final Servidor server;
     private int jugadoresContador = 0;
+    private String[] lista;
 
     public ThreadConnections(Servidor server) {
         this.server = server;
@@ -58,4 +59,10 @@ public class ThreadConnections extends Thread {
         }
         server.iniciarNuevaRonda(); 
     }
+
+    public String[] getLista() {
+        return lista;
+    }
+    
+    
 }

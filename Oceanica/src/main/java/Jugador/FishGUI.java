@@ -13,12 +13,14 @@ import java.awt.event.*;
 import javax.swing.*;
 
 public class FishGUI extends JFrame {
+    private Client client;
 
-    public FishGUI() {
+    public FishGUI(Client clientC) {
+        this.client = clientC;
         setTitle("FishTelepathyMoveSet");
         setSize(420, 350);
         setLocationRelativeTo(null);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         // Fondo azul oscuro
         getContentPane().setBackground(new Color(10, 20, 60));
@@ -40,6 +42,10 @@ public class FishGUI extends JFrame {
         JButton btnCardumen = crearBoton("Cardumen");
         JButton btnShark = crearBoton("SharkAttack");
         JButton btnPulp = crearBoton("Pulp");
+        
+        btnCardumen.addActionListener(e -> abrirOpcionFrame(this.client,"6"));
+        btnShark.addActionListener(e -> abrirOpcionFrame(this.client,"7"));
+        btnPulp.addActionListener(e -> abrirOpcionFrame(this.client,"8"));
 
         // Agregar al panel
         panelBotones.add(btnCardumen);
@@ -69,8 +75,9 @@ public class FishGUI extends JFrame {
 
         return btn;
     }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new FishGUI().setVisible(true));
+    
+    public void abrirOpcionFrame(Client client, String tipo) {
+        AtaqueSimpleFrame atacar = new AtaqueSimpleFrame(client,tipo);
+        atacar.setVisible(true);
     }
 }

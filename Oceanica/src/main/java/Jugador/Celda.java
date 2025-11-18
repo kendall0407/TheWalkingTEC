@@ -19,7 +19,7 @@ public class Celda extends JPanel {
     private Object contenido; // Luchador
     private FrameClient reframe;
     private int estado;  // 0 es viva, 1 es muerta
-    private int vida;
+    private double vida;
     private int poder;
     private int sanidad;
     private int resistencia;
@@ -31,7 +31,7 @@ public class Celda extends JPanel {
         this.tipo = "vacia";
         this.reframe = reframe;
         this.estado = 0;
-        this.vida = 100;
+        this.vida = 99.9;
         setBackground(Color.WHITE);
         setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
         
