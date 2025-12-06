@@ -330,9 +330,12 @@ public class Calculadora extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void lblBorrarBitacoraMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblBorrarBitacoraMouseClicked
+        
+    }//GEN-LAST:event_lblBorrarBitacoraMouseClicked
+    public void borrarBitacora(){
         int opcion = JOptionPane.showConfirmDialog(
             this,
-            "Seguro que desea borrar la bitacora?",
+            "Seguro que desea borrar la bitacora y memoria?",
             "Confirmación",
             JOptionPane.YES_NO_OPTION
         );
@@ -349,7 +352,10 @@ public class Calculadora extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Operación cancelada.");
         }
 
-    }//GEN-LAST:event_lblBorrarBitacoraMouseClicked
+    }
+    public JLabel getLblBorrarBitacora() {
+        return lblBorrarBitacora;
+    }
 
     
     public void verBitacora(String bitacora) {
@@ -369,6 +375,7 @@ public class Calculadora extends javax.swing.JFrame {
     }
     
     public void actualizarBitacora() {
+        this.txaBitacora.setText("");
         try (BufferedReader br = new BufferedReader(new FileReader("Bitacora.txt"))) {
             String linea;
 
@@ -380,6 +387,8 @@ public class Calculadora extends javax.swing.JFrame {
             e.printStackTrace();
         }
     }
+
+    
     public JButton getBtn0() {
         return btn0;
     }
@@ -482,27 +491,6 @@ public class Calculadora extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
-            logger.log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new Calculadora().setVisible(true));
-    }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn0;

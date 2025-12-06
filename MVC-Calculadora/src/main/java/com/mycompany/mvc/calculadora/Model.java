@@ -18,14 +18,23 @@ public class Model {
     public ArrayList<Double> getMemoria() {
         return memoria;
     }
-
+    
+    public void borrarMemoria() {
+        this.memoria.clear();
+    }
     public void agregarMemoriaNum(double num) {
         if (memoria.size() == 10) {
             memoria.remove(0);
         }
         this.memoria.add(num);
         try (FileWriter writer = new FileWriter("Bitacora.txt", true)) {
-            writer.write(memoria.size() + 1 + "." + num + " guardado\n");
+            if (num % 1 == 0) {
+                int n  = (int)num;
+                writer.write("M+ "+ n + " guardado\n");
+            } else {
+                writer.write(memoria.size()+ ". " + num + " guardado\n");
+            }
+            
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -36,12 +45,20 @@ public class Model {
             return -1;
         }
         double promedio = 0;
-        for (Double num : memoria) {
-            promedio += num;
-        }
-        promedio = promedio / memoria.size();
         try (FileWriter writer = new FileWriter("Bitacora.txt", true)) {
-            writer.write("Promedio = "+ promedio +"\n"); 
+            writer.write("Avg "); 
+            for (Double num : memoria) {
+                writer.write(num +", "); 
+                promedio += num;
+            }
+            promedio = promedio / memoria.size();
+            if (promedio % 1 == 0) {
+                int p = (int)promedio;
+                writer.write("\nPromedio = "+ p +"\n"); 
+            } else {
+                writer.write("\nPromedio = "+ promedio +"\n"); 
+            }
+            
         } catch (IOException e) {
             e.printStackTrace();
         }

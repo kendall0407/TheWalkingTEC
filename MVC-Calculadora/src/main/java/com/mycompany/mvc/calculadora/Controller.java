@@ -8,6 +8,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import javax.swing.JButton;
 
 /**
@@ -23,6 +26,7 @@ public class Controller implements ActionListener{
         this.modelo = modelo;
         this.vista = vista;
         suscripciones();
+        inicializarBorrar();
         vista.getTxfResultado().addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
@@ -149,16 +153,23 @@ public class Controller implements ActionListener{
                 
                 break;
             case "AVG":
+                String pr = "";
                 double promedio = this.modelo.calcularPromedio();
+                if (promedio%1!=0) {
+                    pr = String.format("%.5f", promedio); //5 decimales maximo
+                } else {
+                    int p = (int)promedio;
+                    pr = Integer.toString(p);
+                }
                 
-                String pr = String.format("%.5f", promedio); //5 decimales maximo
                 if (promedio != -1) {
                     this.vista.getTxfResultado().setText(pr);
+                    this.vista.actualizarBitacora();
                     break;
                 }
                 this.vista.getTxfResultado().setText("ERR0R");
                 borrarMsg = true;
-                this.vista.actualizarBitacora();
+                
                 break;
                 
             case "M+":
@@ -230,4 +241,15 @@ public class Controller implements ActionListener{
             return false;
         }
     }
+    
+    public void inicializarBorrar() {
+        this.vista.getLblBorrarBitacora().addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                vista.borrarBitacora();
+                modelo.borrarMemoria();
+            }
+        });
+    }
+    
 }
