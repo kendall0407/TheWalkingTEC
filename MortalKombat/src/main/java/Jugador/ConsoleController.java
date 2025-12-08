@@ -5,7 +5,13 @@
 package Jugador;
 
 import Models.*;
+import java.awt.Desktop;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.HashMap;
 import javax.swing.JTextArea;
 
 /**
@@ -72,24 +78,68 @@ public class ConsoleController {
         String command = consola.getText().substring(lockedPosition).trim();
         if (command.isEmpty()) {
             return;
-        } else if (command.toLowerCase().equals("iniciar")) {
+        } else if (command.toLowerCase().equals("iniciar") && client.getClientModel().getPeleadores().size() == 4) {
             this.client.enviarServer(command);
             return;
+        } else if (command.toLowerCase().contains("crear")) {
+            String[] partes = command.split("-");
+            
+            if (client.crearLuchador(partes) != -1) {
+                client.getRefFrame().crearLuchadorEquipo(partes[1], "100%",partes[2]);
+                consola.append("\n > Creado exitosamente!");
+                lockedPosition = consola.getDocument().getLength();
+                return;
+            }             
+        } else if (command.toLowerCase().contains("log")) {
+            File file = new File("LOG.txt");
+            try {
+                Desktop.getDesktop().open(file);
+                return;
+            } catch (IOException ex) {
+                System.getLogger(ConsoleController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+            }
+        } else if (command.toLowerCase().contains("predeterminado")) {
+            crearLuchadoresPredeterminados();
+            return;
         }
-
+        //TODO: revisar comandos
         CommandProcessor processor = new CommandProcessor();
-        Command commandObj = processor.process(command);
+        Command commandObj = processor.process(command, this.client.getID());
         
         if (commandObj == null) {
             consola.append("\n > [ERROR 103] Comando '" + command + "' no reconocido");
             lockedPosition = consola.getDocument().getLength();
             return;
+        } else if (commandObj instanceof AttackCommand) {
+            String[] partes = command.split("-");
+            Peleador luch = this.client.getClientModel().getLuchador(partes[1]);
+            
+            if (luch == null) {
+                consola.append("\n > [ERROR] Luchador no existe");
+                return;
+            }
+
+            int[] danos = this.client.getClientModel().getLuchador(partes[1]).getDañosPorTipo(partes[2]);
+
+            if (danos == null) {
+                consola.append("\n > [ERROR 00] Ya no hay armas por usar, recargalas!");
+                return;
+            }
+            
+            String danosT = Arrays.toString(danos);
+            commandObj = processor.processAtack(command, danosT, Integer.toString(client.getID()));
+            
+            if (commandObj == null) {
+                consola.append("\n > [ERROR] No se pudo procesar el ataque");
+                return;
+            }
+            this.client.getClientModel().setUltimoPeleador(luch); 
+
         }
-        
         try {
             client.getSender().writeObject(commandObj);
             client.getSender().flush();
-
+            commandObj.processInClient(client);
             consola.append("\n > [OK] Enviado: " + commandObj.getClass().getSimpleName());
             lockedPosition = consola.getDocument().getLength();
         } catch (IOException e) {
@@ -97,7 +147,35 @@ public class ConsoleController {
             lockedPosition = consola.getDocument().getLength();
             
         }
+        
+
+        try (FileWriter fw = new FileWriter("LOG.txt", true)) { 
+            LocalDateTime fechaHora = LocalDateTime.now();
+            fw.write("[" + fechaHora.toString() + "] Comando '" + commandObj.getClass().getSimpleName() + 
+                    "' con parametros '" + command + "'\n");//falta resultado
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
     
-    
+    private void crearLuchadoresPredeterminados() {
+        String[] comandos = {
+            "crear-Pyron-fuego-espada-daga-arco-hacha-baston",
+            "crear-Aqualon-agua-tridente-red-lanza-escudo-orbe",
+            "crear-Terron-tierra-martillo-mazo-hacha-pico-escudo",
+            "crear-Ventus-aire-dagas-arco-lanza-espada-shuriken"
+        };
+
+        for (String cmd : comandos) {
+            String[] partes = cmd.split("-");
+
+            client.crearLuchador(partes);
+            client.getRefFrame().crearLuchadorEquipo(partes[1], "100%",partes[2]);
+
+        }
+
+        lockedPosition = consola.getDocument().getLength();
+    }
+
 }

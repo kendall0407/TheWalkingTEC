@@ -20,12 +20,14 @@ public class PrivateMsgCommand extends Command implements Serializable {
 
     @Override
     public void processForServer(ThreadServidor threadServidor) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        ThreadServidor t = threadServidor.getServer().getConnection(Integer.parseInt(parameters[2]));
+        String msg = "J" + parameters[0] + " te susurra: " + parameters[1];
+        threadServidor.getServer().msg(msg, t);
     }
 
     @Override
     public void processInClient(Client client) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        
     }
     
 }

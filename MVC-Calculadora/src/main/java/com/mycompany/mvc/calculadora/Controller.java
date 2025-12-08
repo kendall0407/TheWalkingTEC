@@ -205,9 +205,9 @@ public class Controller implements ActionListener{
                 if (esNumero(this.vista.getTxfResultado().getText())) {
                     boolean esPrimo = this.modelo.esPrimo(Double.parseDouble(this.vista.getTxfResultado().getText()));
                     if (esPrimo) 
-                        this.vista.getTxfResultado().setText("Es primo");
+                        this.vista.getTxfResultado().setText("TRUE");
                     else 
-                        this.vista.getTxfResultado().setText("No es primo");
+                        this.vista.getTxfResultado().setText("FALSE");
                     
                 } else { 
                     this.vista.getTxfResultado().setText("ERR0R!");

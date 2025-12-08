@@ -9,7 +9,9 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 
 /**
  *
@@ -26,7 +28,10 @@ public class Client {
     private int idObjetivo;
     private int ID;
     private ConsoleController consola;
+    private ClientModel clientModel;
+    
     public Client() {
+        this.clientModel = new ClientModel(this);
         this.refFrame = new FrameClient(this);
         this.refFrame.setVisible(true);
         
@@ -40,7 +45,6 @@ public class Client {
             socket = new Socket(IP_ADDRESS , PORT);
             this.sender = new ObjectOutputStream(socket.getOutputStream());    
             this.listener = new ObjectInputStream(socket.getInputStream()); 
-            System.out.println(listener.toString());
             
             threadClient =  new ThreadClient(this);
             threadClient.start();
@@ -59,6 +63,22 @@ public class Client {
         }
     }
     
+    
+    public void disconnect() {
+        try {
+
+            if (sender != null) sender.close();
+            if (listener != null) listener.close();
+            if (socket != null && !socket.isClosed()) {
+                socket.close();
+            }
+
+            System.out.println("Cliente desconectado.");
+
+        } catch (IOException e) {
+            System.out.println("Error al desconectar: " + e.getMessage());
+        }
+    }
     public void escribirMensajeConsola(String msg) {
         if (consola == null)
             consola = new ConsoleController(this);
@@ -83,6 +103,10 @@ public class Client {
         this.refFrame.getTxaStatus().append(msg + "\n");
     }
     
+    public void actualizarContrincante(String msg) {
+        this.refFrame.getTxaContrincante().setText(msg + "\n");
+    }
+    
     public FrameClient getRefFrame() {
         return refFrame;
     }
@@ -102,6 +126,31 @@ public class Client {
     public void setID(int ID) {
         this.ID = ID;
     }
+
+    public int getID() {
+        return ID;
+    }
+
+    public ClientModel getClientModel() {
+        return clientModel;
+    }
+    
+    public void reicbirDano(int dano) {
+        this.clientModel.recibirDano(dano);
+    }
+    public int crearLuchador(String[] parametros) {
+        if (parametros == null || parametros.length != 8) {
+            this.consola.escribirConsola("\n > [ERROR13]: Se requieren exactamente 8 parámetros.");
+            return -1;  // código de error
+        } else if (clientModel.getPeleadores().size() >= 4) {
+            this.consola.escribirConsola("\n > [ERROR15]: No puedes crear mas luchadores.");
+            return -1;
+        }
+
+        this.clientModel.crearLuchador(parametros);
+        
+        return 0;      // OK
+    }
     
     public void enviarServer(Object command) {
         try {
@@ -110,6 +159,37 @@ public class Client {
         } catch (IOException ex) {
             System.getLogger(ConsoleController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }
+    }
+    
+    public void enviarMsgServer(String msg) {
+        try {
+            this.getSender().writeObject(msg);
+            this.getSender().flush();
+        } catch (IOException ex) {
+            System.getLogger(ConsoleController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        }
+    }
+    
+    public void actualizarLuchadorEquipo(int index, String nombre, String porcentaje) {
+        JPanel teamRow = refFrame.getTeamRow();
+        if (teamRow == null) 
+            return;
+        if (index < 0 || index >= teamRow.getComponentCount()) 
+            return;
+        
+        // Obtener la tarjeta existente
+        JPanel card = (JPanel) teamRow.getComponent(index);
+
+        // Recuperar labels guardados
+        JLabel lblNombre = (JLabel) card.getClientProperty("lblNombre");
+        JLabel lblPorcentaje = (JLabel) card.getClientProperty("lblPorcentaje");
+
+        if (lblNombre != null) lblNombre.setText(nombre);
+        if (lblPorcentaje != null) lblPorcentaje.setText(porcentaje);
+
+        // Refrescar interfaz
+        teamRow.revalidate();
+        teamRow.repaint();
     }
     
     public static void main(String[] args) {

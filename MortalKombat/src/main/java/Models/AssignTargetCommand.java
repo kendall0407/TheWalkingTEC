@@ -13,9 +13,6 @@ import Servidor.ThreadServidor;
 import java.io.Serializable;
 
 public class AssignTargetCommand extends Command implements Serializable {
-    
-    // parameters[0] = ID del jugador objetivo
-    private int targetId;
     public AssignTargetCommand(String[] parameters) {
         super(CommandType.ASSIGNTARGET, parameters);
     }
@@ -33,15 +30,11 @@ public class AssignTargetCommand extends Command implements Serializable {
         
         
         // Mostrar mensaje
-        String mensaje = "\n";
-        mensaje += "Tu objetivo es el jugador: "  +idObjetivo+"\n";
-        
-        client.escribirMensajeConsola(mensaje);
-        client.actualizarStatus("Eres el jugador: ");
+        String mensaje = "Tu objetivo es el jugador: "  +idObjetivo;
+        client.actualizarContrincante(mensaje);
+        client.actualizarStatus("Eres el jugador: " + idCliente);
+        client.setID(Integer.parseInt(idCliente));
     }
     
     
-    public int getTargetId() { 
-        return targetId; 
-    }
 }

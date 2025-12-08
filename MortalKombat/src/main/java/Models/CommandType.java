@@ -8,14 +8,7 @@ package Models;
  *
  * @author josed
  */
-public enum CommandType {
-    CREAR {
-        @Override
-        public Command create(String[] params) {
-            return new PrivateMsgCommand(params);
-        }
-    },
-    
+public enum CommandType {    
     ATAQUE {
         @Override
         public Command create(String[] params) {
@@ -41,19 +34,55 @@ public enum CommandType {
     RECEIVEATTACK {
         @Override
         public Command create(String[] params) {
-            return new PrivateMsgCommand(params);
+            return new ReceiveAttackCommand(params);
         }
     },
     
     ASSIGNTARGET {
         @Override
         public Command create(String[] params) {
-            return new PrivateMsgCommand(params);
+            return new AssignTargetCommand(params);
         }
-    }
+    },
     
+    DRAW {
+        @Override
+        public Command create(String[] params) {
+            return new DrawCommand(params);
+        }
+    },
     
-    ;
+    RENDIRSE{
+        @Override
+        public Command create(String[] params) {
+            return new GiveupCommand(params);
+        }
+    },
+    PASS{
+        @Override
+        public Command create(String[] params) {
+            return new PassCommand(params);
+        }
+    },
+    RECARGAR{
+        @Override
+        public Command create(String[] params) {
+            return new RechargeGunsCommand(params);
+        }
+    },
+    COMODIN{
+        @Override
+        public Command create(String[] params) {
+            return new UseJokerCommand(params);
+        }
+    },
+    CONSULTAR{
+        @Override
+        public Command create(String[] params) {
+            return new SelectPlayerCommand(params);
+        }
+        
+    };
 
     public abstract Command create(String[] params);
 

@@ -243,35 +243,38 @@ public class Model {
     }
     
     public boolean esPrimo(double num) {
-        if (num % 1 != 0) {
-            try (FileWriter writer = new FileWriter("Bitacora.txt", true)) {
-                writer.write(num + " no es PRIMO, FALSE\n");
-            } catch (IOException e) {
-            }
+        // Verificar si es entero
+        if (Math.abs(num - (int)num) > 1e-10) {
+            log(num + " FALSE");
             return false;
         }
+
         int numero = (int)num;
+
+        // Verificar rango válido
         if (numero <= 1) {
-            try (FileWriter writer = new FileWriter("Bitacora.txt", true)) {
-                writer.write(num + " no es PRIMO, FALSE\n");
-            } catch (IOException e) {
-            }
+            log(num + " PRIMO, FALSE");
             return false;
-            
         }
-        for (int i = 2; i <= Math.sqrt(numero)-1; i++) {
+
+        // Verificar divisibilidad
+        for (int i = 2; i <= Math.sqrt(numero); i++) {
             if (numero % i == 0) {
-                try (FileWriter writer = new FileWriter("Bitacora.txt", true)) {
-                    writer.write(num + " no es PRIMO, FALSE\n");
-                } catch (IOException e) {
-                }
+                log(num + " PRIMO, FALSE");
                 return false;
-            } 
-        }
-        try (FileWriter writer = new FileWriter("Bitacora.txt", true)) {
-                writer.write(num + " es PRIMO, TRUE\n");
-            } catch (IOException e) {
             }
+        }
+
+        log(num + " PRIMO, TRUE");
         return true;
+    }
+
+    // Método auxiliar para logging (más eficiente)
+    private void log(String mensaje) {
+        try (FileWriter writer = new FileWriter("Bitacora.txt", true)) {
+            writer.write(mensaje + "\n");
+        } catch (IOException e) {
+            // Silencioso pero podrías loguear el error
+        }
     }
 }

@@ -5,6 +5,7 @@
 package Jugador;
 
 import java.awt.*;
+import java.util.HashMap;
 import javax.swing.*;
 /**
  *
@@ -18,7 +19,9 @@ public class FrameClient extends JFrame {
     private JTextArea txaStatus;
     private JTextArea txaReceivedAttacks;
     private JTextArea txaAttacksDone;
-    
+    private JPanel teamRow;
+    private JPanel statsPanel;
+    private JPanel rightPanel;
     
     public FrameClient(Client client) {
         this.client = client;
@@ -40,6 +43,7 @@ public class FrameClient extends JFrame {
 
         JPanel pnlRanking = crearPanel("RANKING", Color.GREEN.darker());
         txaRanking = new JTextArea();
+        txaRanking.setBackground(Color.GRAY);
         txaRanking.setLineWrap(true);       // Ajusta líneas automáticamente
         txaRanking.setWrapStyleWord(true);  // Evita cortar palabras a la mitad
         txaRanking.setEditable(false);
@@ -49,6 +53,7 @@ public class FrameClient extends JFrame {
         
         JPanel pnlContrincante = crearPanel("CONTRINCANTE: ", Color.GREEN.darker());
         txaContrincante = new JTextArea();
+        txaContrincante.setBackground(Color.GRAY);
         txaContrincante.setLineWrap(true);       // Ajusta líneas automáticamente
         txaContrincante.setWrapStyleWord(true);  // Evita cortar palabras a la mitad
         txaContrincante.setEditable(false);
@@ -57,6 +62,7 @@ public class FrameClient extends JFrame {
         
         JPanel pnlStatus = crearPanel("ESTADISTICAS", Color.GREEN.darker());
         txaStatus = new JTextArea();
+        txaStatus.setBackground(Color.GRAY);
         txaStatus.setLineWrap(true);       // Ajusta líneas automáticamente
         txaStatus.setWrapStyleWord(true);  // Evita cortar palabras a la mitad
         txaStatus.setEditable(false);
@@ -68,15 +74,25 @@ public class FrameClient extends JFrame {
         leftPanel.add(pnlStatus);
 
         // PANEL DERECHO - Team
-        JPanel rightPanel = crearPanel("TU EQUIPO", Color.WHITE);
-        rightPanel.setPreferredSize(new Dimension(500, 0));
+        JPanel rightPanel = crearPanelDerecho();
+        // Título
+        JLabel titulo = new JLabel("TU EQUIPO", SwingConstants.CENTER);
+        titulo.setFont(new Font("Arial", Font.BOLD, 26));
+        rightPanel.add(titulo, BorderLayout.NORTH);
+        
+        teamRow = new JPanel(new GridLayout(1, 4, 10, 10));
+        teamRow.setBackground(Color.GRAY);
 
+        rightPanel.add(teamRow, BorderLayout.CENTER);
+        
+                
         // PANELES CENTRALES - 2 paneles verticales
         JPanel centerPanel = new JPanel(new GridLayout(2, 1, 5, 5));
         centerPanel.setBackground(Color.BLACK);
 
-        JPanel pnlReceivedAttacks = crearPanel("No has recibido ataques (aun)", Color.CYAN);
+        JPanel pnlReceivedAttacks = crearPanel("Ataques recibidos", Color.BLUE);
         txaReceivedAttacks = new JTextArea();
+        txaReceivedAttacks.setBackground(Color.GRAY);
         txaReceivedAttacks.setLineWrap(true);       // Ajusta líneas automáticamente
         txaReceivedAttacks.setWrapStyleWord(true);  // Evita cortar palabras a la mitad
         txaReceivedAttacks.setEditable(false);
@@ -85,6 +101,7 @@ public class FrameClient extends JFrame {
         
         JPanel pnlAttacksDone = crearPanel("Aqui se mostraran tus ataques", Color.RED.darker());
         txaAttacksDone = new JTextArea();
+        txaAttacksDone.setBackground(Color.GRAY);
         txaAttacksDone.setLineWrap(true);       // Ajusta líneas automáticamente
         txaAttacksDone.setWrapStyleWord(true);  // Evita cortar palabras a la mitad
         txaAttacksDone.setEditable(false);
@@ -105,11 +122,11 @@ public class FrameClient extends JFrame {
         consola.setBackground(Color.BLACK);
         consola.setForeground(Color.GREEN);
         consola.setFont(new Font("Monospaced", Font.PLAIN, 14));
-        consola.setText("\t\t\t\t\t\t\t\t\t   ┏━━━━━━━━━━━━━━━━━━━━━━━━━┓\n" +
-                        "\t\t\t\t\t\t\t\t\t   ┃      ¡BIENVENIDO!       ┃\n" +
-                        "\t\t\t\t\t\t\t\t\t   ┗━━━━━━━━━━━━━━━━━━━━━━━━━┛\n" +
+        consola.setText("\t\t\t\t\t\t\t\t   ┏━━━━━━━━━━━━━━━━━━━━━━━━━┓\n" +
+                        "\t\t\t\t\t\t\t\t   ┃      ¡BIENVENIDO!       ┃\n" +
+                        "\t\t\t\t\t\t\t\t   ┗━━━━━━━━━━━━━━━━━━━━━━━━━┛\n" +
                         "Instrucciones de comandos" +
-                        "\n1. 'Ataque-arma-enemigo(ID)'" +
+                        "\n1. 'Ataque-peleador-arma-enemigo(ID)'" +
                         "\n2. 'Consultar-luchador'" +
                         "\n3. 'Recargar'" +
                         "\n4. 'Comodin'" +
@@ -117,7 +134,8 @@ public class FrameClient extends JFrame {
                         "\n6. 'Rendirse'" +
                         "\n7. 'Draw'" +
                         "\n8. 'all-msg'" +
-                        "\n9. 'dm-msg-jugador(ID)'\n > ");
+                        "\n9. 'dm-msg-jugador(ID)'\nPor favor crear un personaje"
+                        + "'crear-nombre-poder-arma1-arma2-arma3-arma4-arma5'\n > ");
 
         
         JScrollPane scrollPane = new JScrollPane(consola);
@@ -134,6 +152,116 @@ public class FrameClient extends JFrame {
         setVisible(true);
     }
     
+    private JPanel crearPanelDerecho() {
+
+        rightPanel = new JPanel(new BorderLayout());
+        rightPanel.setBackground(Color.BLACK);
+
+        // === 1) Crear fila de luchadores (arriba) ===
+        teamRow = new JPanel();
+        teamRow.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 10));
+        teamRow.setBackground(Color.BLACK);
+
+        rightPanel.add(teamRow, BorderLayout.NORTH);
+
+        // === 2) Stats Panel inicial (abajo) ===
+        statsPanel = new JPanel();  
+        statsPanel.setBackground(Color.DARK_GRAY);
+        rightPanel.add(statsPanel, BorderLayout.CENTER);
+
+        return rightPanel;
+    }
+
+    public void crearLuchadorEquipo(String nombre, String porcentaje, String poder) {
+        if (teamRow == null) 
+            return;
+
+        teamRow.add(crearTarjetaLuchador(nombre, porcentaje, poder));
+        teamRow.revalidate();
+        teamRow.repaint();
+    }
+
+    
+    
+    public void crearStats(String nombre, String porcentaje, HashMap<String, int[]> armas) {
+
+        // Si ya existe statsPanel, lo quitamos primero
+        if (statsPanel != null) {
+            rightPanel.remove(statsPanel);
+        }
+
+        // Crear nuevo panel
+        statsPanel = new JPanel();
+        statsPanel.setLayout(new BoxLayout(statsPanel, BoxLayout.Y_AXIS));
+        statsPanel.setBackground(Color.GRAY);
+
+        JLabel title = new JLabel(nombre + "   " + porcentaje);
+        title.setFont(new Font("Arial", Font.BOLD, 22));
+        statsPanel.add(title);
+
+        // Recorrer HashMap: clave = arma, valor = int[]
+        for (String arma : armas.keySet()) {
+            statsPanel.add(crearFilaStat(arma, armas.get(arma)));
+        }
+
+        // Agregar el panel actualizado
+        rightPanel.add(statsPanel, BorderLayout.SOUTH);
+
+        // Refrescar
+        rightPanel.revalidate();
+        rightPanel.repaint();
+    }
+
+    public JPanel crearTarjetaLuchador(String nombre, String porcentaje, String poder) {
+        JPanel p = new JPanel();
+        p.setLayout(new BoxLayout(p, BoxLayout.Y_AXIS));
+        p.setBackground(Color.WHITE);
+
+        JLabel img = new JLabel();
+        img.setPreferredSize(new Dimension(110, 180));
+        img.setOpaque(true);
+        img.setBackground(Color.LIGHT_GRAY);
+
+        JLabel lblPorcentaje = new JLabel(porcentaje, SwingConstants.CENTER);
+        lblPorcentaje.setFont(new Font("Arial", Font.BOLD, 22));
+
+        JLabel lblNombre = new JLabel(nombre, SwingConstants.CENTER);
+        lblNombre.setFont(new Font("Arial", Font.BOLD, 16));
+
+        JLabel lblPoder = new JLabel(poder.toUpperCase(), SwingConstants.CENTER);
+        lblPoder.setFont(new Font("Arial", Font.PLAIN, 12));
+        lblPoder.setForeground(Color.RED);
+
+        p.add(img);
+        p.add(lblPorcentaje);
+        p.add(lblNombre);
+        p.add(lblPoder);
+
+        // Guardar referencias por si quieres actualizar luego
+        p.putClientProperty("lblPorcentaje", lblPorcentaje);
+        p.putClientProperty("lblNombre", lblNombre);
+        p.putClientProperty("lblPoder", lblPoder);
+
+        return p;
+    }
+    private JPanel crearFilaStat(String arma, int[] valores) {
+        JPanel row = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        row.setBackground(Color.GRAY);
+
+        JLabel nombre = new JLabel(arma + "   ");
+        nombre.setPreferredSize(new Dimension(80, 20));
+        row.add(nombre);
+
+        for (int v : valores) {
+            JLabel celda = new JLabel(String.valueOf(v));
+            celda.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+            celda.setPreferredSize(new Dimension(30, 20));
+            celda.setHorizontalAlignment(SwingConstants.CENTER);
+            row.add(celda);
+        }
+
+        return row;
+    }
 
     
     private JPanel crearPanel(String title, Color borderColor) {
@@ -178,6 +306,19 @@ public class FrameClient extends JFrame {
     public Client getClient() {
         return client;
     }
+
+    public JPanel getTeamRow() {
+        return teamRow;
+    }
+
+    public JPanel getStatsPanel() {
+        return statsPanel;
+    }
+
+    public JPanel getRightPanel() {
+        return rightPanel;
+    }
+    
     
 
 }

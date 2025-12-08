@@ -12,25 +12,20 @@ import java.io.Serializable;
  *
  * @author kendall-sanabria
  */
-public class MsgAllCommand extends Command implements Serializable{
+public class UseJokerCommand extends Command implements Serializable{
 
-    public MsgAllCommand(String[] parameters) {
-        super(CommandType.ALL, parameters);
+    public UseJokerCommand(String[] parameters) {
+        super(CommandType.COMODIN, parameters);
     }
-
-
 
     @Override
     public void processForServer(ThreadServidor threadServidor) {
-
-        threadServidor.getServer().writeMessage("Jugador J" + parameters[0] + " grito " + parameters[1]);
-
-        threadServidor.getServer().broadcast("J"+parameters[0]+" grita a todos: " + parameters[1]);
+        
     }
 
     @Override
     public void processInClient(Client client) {
         
-    }    
+    }
     
 }

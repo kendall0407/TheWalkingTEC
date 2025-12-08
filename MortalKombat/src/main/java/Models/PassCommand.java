@@ -12,25 +12,20 @@ import java.io.Serializable;
  *
  * @author kendall-sanabria
  */
-public class MsgAllCommand extends Command implements Serializable{
+public class PassCommand extends Command implements Serializable{
 
-    public MsgAllCommand(String[] parameters) {
-        super(CommandType.ALL, parameters);
+    public PassCommand(String[] parameters) {
+        super(CommandType.PASS, parameters);
     }
-
-
 
     @Override
     public void processForServer(ThreadServidor threadServidor) {
-
-        threadServidor.getServer().writeMessage("Jugador J" + parameters[0] + " grito " + parameters[1]);
-
-        threadServidor.getServer().broadcast("J"+parameters[0]+" grita a todos: " + parameters[1]);
+        threadServidor.pasarTurno();
     }
 
     @Override
     public void processInClient(Client client) {
-        
-    }    
+        client.escribirMensajeConsola("Turno saltado!");
+    }
     
 }

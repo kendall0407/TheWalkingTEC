@@ -12,21 +12,20 @@ import java.io.Serializable;
  *
  * @author kendall-sanabria
  */
+public class SelectPlayerCommand extends Command implements Serializable{
 
-public class CrearPersonajeCommand extends Command implements Serializable {
-
-    public CrearPersonajeCommand(String[] parameters) {
-        super(CommandType.CREAR, parameters);
+    public SelectPlayerCommand(String[] parameters) {
+        super(CommandType.CONSULTAR, parameters);
     }
 
     @Override
     public void processForServer(ThreadServidor threadServidor) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        
     }
 
     @Override
     public void processInClient(Client client) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        
     }
     
 }

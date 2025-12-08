@@ -24,26 +24,18 @@ public class AttackCommand extends Command implements Serializable {
     public void processForServer(ThreadServidor threadServidor) {
         String[] params = getParameters();
         int idAtacante = Integer.parseInt(params[0]);
-        int idObjetivo = Integer.parseInt(params[1]);
-        String arma = params[2];
+        String arma = params[1];
+        int idObjetivo = Integer.parseInt(params[2]);
+        int dano = Integer.parseInt(params[3]);
+        String peleador = params[4];
 
         ThreadServidor objetivo = threadServidor.getServer().getConnection(idObjetivo);
-        objetivo.recibirAtaque(idAtacante, arma);
+        objetivo.recibirAtaque(params);
+
     }
     
     @Override
     public void processInClient(Client client) {
-        String[] params = getParameters();
-        int idA = Integer.parseInt(params[0]);
-        int idO = Integer.parseInt(params[1]);
-        int tipo = Integer.parseInt(params[2]);
-        int x = Integer.parseInt(params[3]);
-        int y = Integer.parseInt(params[4]);
-        
-        //actualizar el area de bitácora
-        //String mensaje = "⚔️ " + idA + " atacó a " + idO + " con " + tiposAtaques[tipo] + "\n";
-        //client.agregarMensajeBitacora(mensaje);
-        
         
     }
 

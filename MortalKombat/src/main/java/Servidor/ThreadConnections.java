@@ -14,8 +14,6 @@ import java.net.Socket;
 public class ThreadConnections extends Thread {
 
     private final Servidor server;
-    private int jugadoresContador = 0;
-    private String[] lista;
 
     public ThreadConnections(Servidor server) {
         this.server = server;
@@ -35,27 +33,18 @@ public class ThreadConnections extends Thread {
                 newSocket = server.getServer().accept();
 
                 ThreadServidor newServerThread =
-                        new ThreadServidor(server, newSocket, jugadoresContador);
-
+                        new ThreadServidor(server, newSocket, server.getConnectedClients().size());
+                
                 server.getConnectedClients().add(newServerThread);
                 newServerThread.start();
 
                 server.writeMessage("Un jugador ha entrado a la sala (Jugadores: " +
-                        (jugadoresContador + 1) + ")");
-
-                jugadoresContador++;
+                        server.getConnectedClients().size() + ")");
 
             } catch (IOException ex) {
                 server.writeMessage("Error: " + ex.getMessage());
             }
         }
-
-        
-        
-    }
-
-    public String[] getLista() {
-        return lista;
     }
     
     

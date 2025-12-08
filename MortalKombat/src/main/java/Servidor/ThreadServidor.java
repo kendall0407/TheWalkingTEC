@@ -10,6 +10,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import Models.*;
+import java.util.ArrayList;
 /**
  *
  * @author josed
@@ -24,8 +25,10 @@ public class ThreadServidor extends Thread{
     private int idObjetivo;
     private boolean isRunning = true;
     private boolean esMiTurno = false;
-    private final Object turnoLock = new Object();
-    private boolean gameStarted = false;
+    private final Object turnoLock;
+    private ArrayList<Integer> objetivos = new ArrayList<>();
+    public boolean drawPending = false;
+    public boolean noEmpate = false;
     
      // Información del jugador
     private int vida = 100;
@@ -35,6 +38,7 @@ public class ThreadServidor extends Thread{
         this.server = server;
         this.socket = socket;
         this.idJugador = id;
+        this.turnoLock = this.server.turnoLock;
         try {
             sender = new ObjectOutputStream(socket.getOutputStream());
             sender.flush(); 
@@ -51,12 +55,11 @@ public class ThreadServidor extends Thread{
         while (isRunning) {
             try {
                 Object obj = listener.readObject();
-                System.out.println(gameStarted);
-                if (!gameStarted) {
-                    if (obj instanceof String msg) {
-
+               
+                if (!server.gameStarted) {
+                    if (obj instanceof String msg) {    
                         if (msg.equalsIgnoreCase("iniciar")) {
-                            gameStarted = true;
+                            server.gameStarted = true;
                             server.setMaxConnections(server.getConections());
                             if (server.getConections() == 1) {
                                 isRunning = false;
@@ -67,7 +70,7 @@ public class ThreadServidor extends Thread{
                             server.writeMessage("Juego iniciado");
                             server.writeMessage("Sala llena, comenzando partida...");
                             try {
-                                Thread.sleep(5000);
+                                Thread.sleep(2000);
                             } catch (InterruptedException ex) {
                                 System.getLogger(ThreadConnections.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
                             }
@@ -77,7 +80,13 @@ public class ThreadServidor extends Thread{
                     continue;
                 }
 
-                    
+                if (obj instanceof MsgAllCommand) {
+                    ((Command)obj).processForServer(this);
+                    continue;
+                } else if (obj instanceof PrivateMsgCommand) {
+                    ((Command)obj).processForServer(this);
+                    continue;
+                }
 
                 // Esperar hasta que sea mi turno
                 esperarMiTurno();
@@ -96,10 +105,15 @@ public class ThreadServidor extends Thread{
                     
                     // Procesar el comando
                     cmd.processForServer(this);
-                    
+                    if(noEmpate) { //verificar empate 
+                        noEmpate = false;
+                        continue;
+                    }
                     // Avanzar al siguiente turno
                     server.siguienteTurno();
                     
+                } else {
+                    server.broadcast((String) obj);
                 }
                 
                 // Resetear flag de turno
@@ -108,6 +122,7 @@ public class ThreadServidor extends Thread{
                 }
             } catch (IOException ex) {
                 server.writeMessage("Jugador J" + idJugador + " desconectado");
+                server.getDesconectados().add(idJugador);
                 isRunning = false;
                 server.getConnectedClients().remove(this);
             } catch (ClassNotFoundException ex) {
@@ -144,12 +159,13 @@ public class ThreadServidor extends Thread{
     }
     
     public void asignarNuevoObjetivo() {
-        idObjetivo = server.elegirObjetivo(this.idJugador);
+        idObjetivo = server.elegirObjetivo(this);
         String[] params = { 
             Integer.toString(idJugador), 
             Integer.toString(idObjetivo)
         };
         AssignTargetCommand cmd = new AssignTargetCommand(params);
+        
         try {
             sender.writeObject(cmd);
             sender.flush();
@@ -169,6 +185,8 @@ public class ThreadServidor extends Thread{
     public int getVida() { return vida; }
     public int getAtaquesHechos() { return ataquesHechos; }
     public int getIdObjetivo() { return idObjetivo; }
+    public void setIdJugador(int idJugador) { this.idJugador = idJugador; }
+    public void setIdObjetivo(int idObjetivo) { this.idObjetivo = idObjetivo;  }
     
     public ObjectOutputStream getSender() {
         return sender;
@@ -183,7 +201,7 @@ public class ThreadServidor extends Thread{
     public void stopThread() {
         isRunning = false;
     }
-
+        
     public Servidor getServer() {
         return server;
     }
@@ -196,18 +214,32 @@ public class ThreadServidor extends Thread{
         return idJugador;
     }
     
-    public void recibirAtaque(int atacante, String arma){
-        String[] params = { 
-            Integer.toString(atacante),
-            arma
-        };
-        ReceiveAttackCommand cmd = new ReceiveAttackCommand(CommandType.RECEIVEATTACK, params);
+    public void recibirAtaque(String[] params){        
+        //recibirDano(dano);
+        ReceiveAttackCommand cmd = new ReceiveAttackCommand(params);
         try {
             sender.writeObject(cmd);
             sender.flush();
         } catch (IOException ex) {
             server.writeMessage("Error recibiendo ataque");
         } 
+    }
+    
+    public void recibirDano(int dano) {
+        this.vida -= dano;
+        if (vida <=0) {
+           server.getConnectedClients().remove(this.getIdJugador());
+            this.stopThread();
+        }
+    }
+    
+    public ArrayList<Integer> getObjetivos() {
+        return objetivos;
+    }
+    
+    public void pasarTurno() {
+        //this. empates++
+        server.saltarTurno(this);
     }
     
     
