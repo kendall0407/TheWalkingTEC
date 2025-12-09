@@ -27,11 +27,21 @@ public class User implements Serializable {
     public String getPassword() { return password; }
     public int[] getStats() { return stats; }
     public void setStats(int[] stats) { this.stats = stats; }
-
+    
+    public void actualizarStats(int[] statsNuevas) {
+        for (int i = 0; i < 6; i++) {
+            stats[i] = statsNuevas[i];
+        }
+    }
     // función inútil por ahora que "cargaría" stats
-    public void loadStats() {
+    public String loadStats() {
+        String msg = "Stats de " + username + ":";
         System.out.println("Cargando stats de " + username + ":");
-        for (int i = 0; i < stats.length; i++) System.out.println("stat["+i+"]="+stats[i]);
+        for (int i = 0; i < stats.length; i++) {
+            msg += "stat["+i+"]="+stats[i];
+            System.out.println("stat["+i+"]="+stats[i]);
+        }
+        return msg;
     }
 }
 

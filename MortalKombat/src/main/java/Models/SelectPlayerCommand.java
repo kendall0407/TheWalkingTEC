@@ -6,6 +6,7 @@ package Models;
 
 import Jugador.Client;
 import Servidor.ThreadServidor;
+import java.io.IOException;
 import java.io.Serializable;
 
 /**
@@ -20,7 +21,19 @@ public class SelectPlayerCommand extends Command implements Serializable{
 
     @Override
     public void processForServer(ThreadServidor threadServidor) {
+        String[] params = getParameters();
+        int idObjetivo = Integer.parseInt(params[0]);
+        ThreadServidor objetivo = threadServidor.getServer().getConnection(idObjetivo);
+        String info = objetivo.solicitarInfo(objetivo.getUsuario());
         
+        String[] p = {info};
+        SelectPlayerCommand cmd = new SelectPlayerCommand(p);
+        try {
+            threadServidor.getSender().writeObject(cmd);
+            threadServidor.getSender().flush();
+        } catch (IOException ex) {
+            threadServidor.getServer().writeMessage("Error enviando datos de jugador");
+        } 
     }
 
     @Override

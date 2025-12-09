@@ -30,7 +30,13 @@ public class ThreadServidor extends Thread{
     private ArrayList<Integer> objetivos = new ArrayList<>();
     public boolean drawPending = false;
     public boolean noEmpate = false;
+    private String usuario;
+    private String contrasena;
+    private String ultimoTipo;
     
+    private int vidaUltimo;
+    public int muertes;
+    public int rendiciones;
      // Información del jugador
     private int vida = 100;
     private int ataquesHechos = 0;
@@ -106,6 +112,10 @@ public class ThreadServidor extends Thread{
                 } else if (obj instanceof PrivateMsgCommand) {
                     ((Command)obj).processForServer(this);
                     continue;
+                } else if (obj instanceof String msg) {
+                    if(msg.toLowerCase().equals("muerte")){
+                        this.muertes++;
+                    }
                 }
 
                 // Esperar hasta que sea mi turno
@@ -249,8 +259,17 @@ public class ThreadServidor extends Thread{
     }
     
     public void recibirAtaque(String[] params){        
-        //recibirDano(dano);
-        ReceiveAttackCommand cmd = new ReceiveAttackCommand(params);
+        // Crear nuevo arreglo con espacio extra
+        String[] nuevosParams = new String[params.length + 1];
+
+        // Copiar los originales
+        System.arraycopy(params, 0, nuevosParams, 0, params.length);
+
+        // Agregar el nuevo parámetro
+        nuevosParams[params.length] = extra;
+
+        // Usar el arreglo expandido
+        ReceiveAttackCommand cmd = new ReceiveAttackCommand(nuevosParams);
         try {
             sender.writeObject(cmd);
             sender.flush();
@@ -278,4 +297,42 @@ public class ThreadServidor extends Thread{
             server.writeMessage("Error recibiendo ataque");
         } 
     }
+    
+    public String solicitarInfo(String usuario) {
+        return server.getDb().getUser(usuario).loadStats();
+    }
+
+    public String getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(String usuario) {
+        this.usuario = usuario;
+    }
+
+    public String getContrasena() {
+        return contrasena;
+    }
+
+    public void setContrasena(String contrasena) {
+        this.contrasena = contrasena;
+    }
+
+    public String getUltimoTipo() {
+        return ultimoTipo;
+    }
+
+    public void setUltimoTipo(String ultimoTipo) {
+        this.ultimoTipo = ultimoTipo;
+    }
+
+    public int getVidaUltimo() {
+        return vidaUltimo;
+    }
+
+    public void setVidaUltimo(int vidaUltimo) {
+        this.vidaUltimo = vidaUltimo;
+    }
+    
+    
 }

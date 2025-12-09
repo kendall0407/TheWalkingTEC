@@ -74,7 +74,7 @@ public class Client {
             }
 
             System.out.println("Cliente desconectado.");
-
+            this.getClientModel().getUb().save();
         } catch (IOException e) {
             System.out.println("Error al desconectar: " + e.getMessage());
         }
@@ -84,7 +84,9 @@ public class Client {
             consola = new ConsoleController(this);
         
         if(msg.contains("Turno de J")) {
-            
+            String numero = msg.replaceAll("\\D", "");
+            if(numero.equals(Integer.toString(ID)))
+                this.consola.turno = true;
         }
         this.consola.escribirConsola(msg);
     }

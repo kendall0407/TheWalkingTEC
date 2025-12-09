@@ -44,10 +44,8 @@ public class Servidor {
     }
     
     public void conectarServidor(){
-//        db = new UserDatabase();
-//        db.load();
-//        AuthGUI a = new AuthGUI();
-//        AuthGUI.promptForUser(db);
+        db = new UserDatabase();
+        db.load();
         try {
             server = new ServerSocket(PORT);
             System.out.println("Servidor iniciado en puerto " + PORT);
@@ -237,7 +235,12 @@ public class Servidor {
         this.turnoActualCopia = turnoActual;
         this.turnoActual = turnoActual;
     }
+
+    public UserDatabase getDb() {
+        return db;
+    }
      
+
     
     public static void main(String[] args) {
         Servidor s = new Servidor();

@@ -88,6 +88,18 @@ public enum CommandType {
             return new ReceiveJokerCommand(params);
         }
     },
+    OWNINFO{
+        @Override
+        public Command create(String[] params) {
+            return new ReceiveJokerCommand(params);
+        }
+    },
+    CONSULTARESPONSE{
+        @Override
+        public Command create(String[] params) {
+            return new ReceiveJokerCommand(params);
+        }
+    },
     CONSULTAR{
         @Override
         public Command create(String[] params) {

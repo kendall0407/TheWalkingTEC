@@ -62,12 +62,10 @@ public class CommandProcessor {
         }
 
         // 4. Agregar las nuevas cosas al final
-        finalParams[params.length] = danos;
-        finalParams[params.length+1] = id;
-        finalParams[params.length+2] = poder;
+        finalParams[params.length-1] = danos;
+        finalParams[params.length] = id;
+        finalParams[params.length+1] = poder;
         
-        // 5. Crear el comando final
-        // (asumiendo que tenés un AttackCommand que recibe un array)
         return new AttackCommand(finalParams);
     }
     
@@ -77,7 +75,7 @@ public class CommandProcessor {
         String[] params = line.split("-");
         
         // 2. Crear un arreglo más grande para meter los extras
-        String[] finalParams = new String[params.length + 5];
+        String[] finalParams = new String[params.length + 4];
 
         // 3. Copiar los parámetros originales
         for (int i = 0; i < params.length-1; i++) {
@@ -85,14 +83,12 @@ public class CommandProcessor {
         }
 
         // 4. Agregar las nuevas cosas al final
-        finalParams[params.length] = danos1;
-        finalParams[params.length+1] = danos2;
-        finalParams[params.length+2] = id;
-        finalParams[params.length+3] = poder1;
-        finalParams[params.length+4] = poder2;
-        
-        // 5. Crear el comando final
-        // (asumiendo que tenés un AttackCommand que recibe un array)
+        finalParams[params.length+1] = danos1;
+        finalParams[params.length] = danos2;
+        finalParams[params.length+1] = id;
+        finalParams[params.length+2] = poder1;
+        finalParams[params.length+3] = poder2;
+
         return new AttackCommand(finalParams);
     }
 }

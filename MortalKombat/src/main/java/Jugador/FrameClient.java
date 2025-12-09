@@ -125,18 +125,8 @@ public class FrameClient extends JFrame {
         consola.setText("\t\t\t\t\t\t\t\t   ┏━━━━━━━━━━━━━━━━━━━━━━━━━┓\n" +
                         "\t\t\t\t\t\t\t\t   ┃      ¡BIENVENIDO!       ┃\n" +
                         "\t\t\t\t\t\t\t\t   ┗━━━━━━━━━━━━━━━━━━━━━━━━━┛\n" +
-                        "Instrucciones de comandos" +
-                        "\n1. 'Ataque-peleador-arma-enemigo(ID)'" +
-                        "\n2. 'Consultar-jugador(ID)'" +
-                        "\n3. 'Recargar'" +
-                        "\n4. 'Comodin'" +
-                        "\n5. 'Pass'" +
-                        "\n6. 'Rendirse'" +
-                        "\n7. 'Draw'" +
-                        "\n8. 'all-msg'" +
-                        "\n9. 'dm-msg-jugador(ID)'\nPor favor crear un personaje" +
-                        "\n10. 'comodin-peleador1-arma1-peleador2-arma2-enemigo(ID)" +
-                        " ------'crear-nombre-poder-arma1-arma2-arma3-arma4-arma5'---\n > ");
+                        "Por favor, introduzca su usario 'login-usuario-contrasena'" +
+                        "o si no tiene cuenta 'register-usuario-contrasena'\n > ");
 
         
         JScrollPane scrollPane = new JScrollPane(consola);
@@ -320,6 +310,19 @@ public class FrameClient extends JFrame {
         return rightPanel;
     }
     
-    
+    public void consultarInstrucciones() {
+        consola.setText("Instrucciones de comandos" +
+                        "\n1. 'Ataque-peleador-arma-enemigo(ID)'" +
+                        "\n2. 'Consultar-jugador(ID)'" +
+                        "\n3. 'Recargar'" +
+                        "\n4. 'Comodin'" +
+                        "\n5. 'Pass'" +
+                        "\n6. 'Rendirse'" +
+                        "\n7. 'Draw'" +
+                        "\n8. 'all-msg'" +
+                        "\n9. 'dm-msg-jugador(ID)'\nPor favor crear un personaje" +
+                        "\n10. 'comodin-peleador1-arma1-peleador2-arma2-enemigo(ID)" +
+                        " \n------'crear-nombre-poder-arma1-arma2-arma3-arma4-arma5'---\n > ");
+    }
 
 }

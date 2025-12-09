@@ -22,3 +22,8 @@
 [2025-12-08T14:44:36.473090497] Comando 'AttackCommand' con parametros 'ataque-Pyron-daga-1'
 [2025-12-08T14:47:21.611750487] Comando 'AttackCommand' con parametros 'ataque-Pyron-espada-1'
 [2025-12-08T14:54:46.514869967] Comando 'AttackCommand' con parametros 'ataque-Pyron-daga-1'
+[2025-12-08T22:47:07.471376675] Comando 'MsgAllCommand' con parametros 'all-perras todos'
+ [2025-12-08T22:50:29.815743886] Comando 'MsgAllCommand' con parametros 'all-perras'
+ [2025-12-08T23:21:50.175035333] Comando 'AttackCommand' con parametros 'ataque-Pyron-espada-2'
+ [2025-12-08T23:28:44.983773065] Comando 'AttackCommand' con parametros 'ataque-Pyron-espada-2'
+ 

@@ -5,6 +5,7 @@
 package Jugador;
 
 import Models.*;
+import Servidor.User;
 import java.awt.Desktop;
 import java.io.File;
 import java.io.FileWriter;
@@ -23,12 +24,16 @@ public class ConsoleController {
     private Client client;
     private int lockedPosition;
     public boolean turno = false;
+    public boolean sesionIniciada = false;
     
     public ConsoleController(Client client) {
         this.client = client; 
         this.consola = client.getRefFrame().getConsola();
         lockedPosition = consola.getDocument().getLength();
         suscripciones();
+        
+        
+        
         
     }
     
@@ -77,11 +82,20 @@ public class ConsoleController {
     
     public void recibirComandos() {
         String command = consola.getText().substring(lockedPosition).trim();
+        if(sesionIniciada) {
+            this.client.getClientModel().getStatus();
+            client.actualizarStatus(client.getClientModel().getUser().loadStats());
+        }
         if (command.isEmpty()) {
             return;
         } else if (command.toLowerCase().equals("iniciar") && client.getClientModel().getPeleadores().size() == 4) {
-            this.client.enviarServer(command);
-            return;
+            if (sesionIniciada) {
+                this.client.enviarServer(command);
+                return;
+            } else {
+                consola.append("\n -> [ERROR02] No has iniciado sesion aun");
+            }
+            
             
         } else if (command.toLowerCase().contains("crear")) {
             String[] partes = command.split("-");
@@ -92,6 +106,70 @@ public class ConsoleController {
                 lockedPosition = consola.getDocument().getLength();
                 return;
             }   
+        
+        } else if (command.toLowerCase().contains("login")) {
+            //login-usuario-contra
+            //verificar en database si ya existe, sino crear con 
+            //register-usuario-contra
+            //de esta manera se cargan las cosas y el server tambien puede acceder a eso
+            String[] partes = command.split("-");
+            String usuario = partes[1];
+            String contrasena = partes[2];
+            User u = client.getClientModel().getUb().getUser(usuario);
+            client.getClientModel().setUser(u);
+            if(!client.getClientModel().getUb().userExists(usuario)) {
+                consola.append("\n > Usuario no encontrado, por favor cree una cuenta");
+                return;
+            } else {
+                if(u.getPassword().equals(contrasena)) {
+                    sesionIniciada = true;
+                    consola.append("\n > Se inicio sesion existosamente! Ahora crea peleadores!");
+                    client.getRefFrame().consultarInstrucciones();
+                    lockedPosition = consola.getDocument().getLength();
+                    client.actualizarStatus(u.loadStats());
+                    client.getClientModel().setStatus(u.getStats());
+                    String[] params = {usuario, contrasena, "0" ,"100"};
+                    OwnInfoCommand cmd = new OwnInfoCommand(params);
+                    try {
+                        client.getSender().writeObject(cmd);
+                        client.getSender().flush();
+                    } catch (IOException ex) {
+                        System.getLogger(ConsoleController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+                    }
+                    
+                    return;
+                } else {
+                    consola.append("\n -> Contrasena incorrecta!");
+                    return;
+                }
+            }
+        } else if (command.toLowerCase().contains("register")) {
+            String[] partes = command.split("-");
+            String usuario = partes[1];
+            String contrasena = partes[2];
+            if(!client.getClientModel().getUb().userExists(usuario)) {
+                User u = client.getClientModel().getUb().createUser(usuario, contrasena);
+                client.getClientModel().setUser(u);
+                consola.append("\n > Se creo el usuario existosamente! Ahora crea peleadores!");
+                sesionIniciada = true;
+                client.getRefFrame().consultarInstrucciones();
+                lockedPosition = consola.getDocument().getLength();
+                client.actualizarStatus(u.loadStats());
+                client.getClientModel().setStatus(u.getStats());
+                String[] params = {usuario, contrasena, "0" ,"100"};
+                OwnInfoCommand cmd = new OwnInfoCommand(params);
+                try {
+                    client.getSender().writeObject(cmd);
+                    client.getSender().flush();
+                } catch (IOException ex) {
+                    System.getLogger(ConsoleController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+                }
+                    
+                return;
+            } else {
+                consola.append("\n > Este suario ya existe!");
+                return;
+            }
             
         } else if (command.toLowerCase().contains("log")) {
             File file = new File("LOG.txt");
@@ -150,6 +228,7 @@ public class ConsoleController {
             this.client.actualizarAtaquesHechos("Atacaste al jugador J" +
                     partes[3] + "con " + luch.getNombre() + "[" + luch.getTipoAtaque() +
                     "]" + "\nArma: " + partes[2]);
+            turno = false;
         } else if (commandObj instanceof DrawCommand) {
             if (!turno) {
                 consola.append("\n > [ERROR161] NO ES TU TURNO!"+ "\n > ");
@@ -209,7 +288,8 @@ public class ConsoleController {
                     partes[3] + "con " + luch1.getNombre() + "[" + luch1.getTipoAtaque() +
                     "]" + "\nArma: " + partes[2] + " usando comodin atacaste con " + luch2.getNombre() +
                             "["+luch2.getTipoAtaque() + "]\nArma: " + partes[4]);
-                    
+                    turno = false;
+                    this.client.getClientModel().comodin = false;
                     return;
                 } else {
                     consola.append("\n > NO TIENES UN COMODIN QUE APLICAR AUN" + "\n > ");
@@ -230,7 +310,18 @@ public class ConsoleController {
             
         }
         
-
+        String[] params = {client.getClientModel().getUsuario(), 
+                client.getClientModel().getUsuario(),
+                client.getClientModel().getUltimoPeleador().getTipoAtaque(),
+                Integer.toString(client.getClientModel().getUltimoPeleador().getVida())};
+        OwnInfoCommand cmd = new OwnInfoCommand(params);
+        try {
+            client.getSender().writeObject(cmd);
+            client.getSender().flush();
+        } catch (IOException ex) {
+            System.getLogger(ConsoleController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+        }
+                    
         try (FileWriter fw = new FileWriter("LOG.txt", true)) { 
             LocalDateTime fechaHora = LocalDateTime.now();
             fw.write("[" + fechaHora.toString() + "] Comando '" + commandObj.getClass().getSimpleName() + 
@@ -238,7 +329,8 @@ public class ConsoleController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+        turno = false;
+        
     }
     
     

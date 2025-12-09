@@ -4,6 +4,8 @@
  */
 package Jugador;
 
+import Servidor.User;
+import Servidor.UserDatabase;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -15,20 +17,28 @@ public class ClientModel {
     private Client client;
     private ArrayList<Peleador> peleadores = new ArrayList<>();
     private int vida;
-    private HashMap<String, Integer> status = new HashMap<>();
+    private int[] status;
     private HashMap<String, Integer> contrincante = new HashMap<>();
     private HashMap<String, Integer> ranking = new HashMap<>();
     private Peleador ultimoPeleador;
     public boolean comodin = false;
+    private String usuario;
+    private String contrasena;
+    private UserDataBase ub;
+    private User user;
     
     public ClientModel(Client cl) {
+        ub = new UserDataBase();
+        ub.load();
         this.client = cl;
-        status.put("Wins", 0);
-        status.put("Losses", 0);
-        status.put("Attacks", 0);
-        status.put("Success", 0);
-        status.put("Failed", 0);
-        status.put("Giveup", 0); 
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public ArrayList<Peleador> getPeleadores() {
@@ -38,6 +48,14 @@ public class ClientModel {
     public void crearLuchador(String[] parametros) {
         Peleador p = new Peleador(parametros);
         peleadores.add(p);
+    }
+
+    public int[] getStatus() {
+        return status;
+    }
+
+    public void setStatus(int[] status) {
+        this.status = status;
     }
     
     public int getVida() {
@@ -137,9 +155,12 @@ public class ClientModel {
         client.actualizarReceivedAttacks("Has sido atacado por J" + atacante + 
                 " con "+peleador + " [" + tipoAtaque  +"] con ARMA -> " + arma+
                 " dano: " + dano + "%");
+        if(ultimoPeleador == null)
+            ultimoPeleador = peleadores.getFirst();
         int vidaS = this.ultimoPeleador.recibirDano(dano);
         if(vidaS <=0) {
             client.escribirMensajeConsola("Se te murio un peleador :(");
+            client.enviarMsgServer("muerte");
             client.actualizarLuchadorEquipo(peleadores.indexOf(ultimoPeleador), ultimoPeleador.getNombre(), Integer.toString(vidaS));
             if (!peleadores.isEmpty()){
                 ultimoPeleador = peleadores.getFirst();
@@ -258,7 +279,7 @@ public class ClientModel {
         System.out.println("Vida total: " + vida);
     }
     
-    public int[] stringAEnteros(String s) {
+    private int[] stringAEnteros(String s) {
         s = s.replace("[", "").replace("]", "");
         String[] partes = s.split(",");
         int[] arr = new int[partes.length];
@@ -267,4 +288,44 @@ public class ClientModel {
         }
         return arr;
     }
+
+    public String getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(String usuario) {
+        this.usuario = usuario;
+    }
+
+    public String getContrasena() {
+        return contrasena;
+    }
+
+    public void setContrasena(String contrasena) {
+        this.contrasena = contrasena;
+    }
+
+    public UserDataBase getUb() {
+        return ub;
+    }
+
+
+
+    public HashMap<String, Integer> getContrincante() {
+        return contrincante;
+    }
+
+    public void setContrincante(HashMap<String, Integer> contrincante) {
+        this.contrincante = contrincante;
+    }
+
+    public HashMap<String, Integer> getRanking() {
+        return ranking;
+    }
+
+    public void setRanking(HashMap<String, Integer> ranking) {
+        this.ranking = ranking;
+    }
+    
+    
 }
