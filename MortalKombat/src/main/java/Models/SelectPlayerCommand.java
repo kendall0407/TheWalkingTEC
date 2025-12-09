@@ -24,10 +24,11 @@ public class SelectPlayerCommand extends Command implements Serializable{
         String[] params = getParameters();
         int idObjetivo = Integer.parseInt(params[0]);
         ThreadServidor objetivo = threadServidor.getServer().getConnection(idObjetivo);
+        System.out.println(objetivo + objetivo.getUsuario());
         String info = objetivo.solicitarInfo(objetivo.getUsuario());
         
         String[] p = {info};
-        SelectPlayerCommand cmd = new SelectPlayerCommand(p);
+        SelectPlayerResponseCommand cmd = new SelectPlayerResponseCommand(p);
         try {
             threadServidor.getSender().writeObject(cmd);
             threadServidor.getSender().flush();

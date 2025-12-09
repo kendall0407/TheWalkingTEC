@@ -12,10 +12,12 @@ import java.io.Serializable;
  *
  * @author kendall-sanabria
  */
-public class SelectPlayerResponseCommand extends Command implements Serializable{
-    public SelectPlayerResponseCommand(String[] parameters) {
-        super(CommandType.CONSULTARESPONSE, parameters);
+public class NotificarRanking extends Command implements Serializable{
+    public NotificarRanking(String[] parameters) {
+        super(CommandType.NOTIFICAR, parameters);
     }
+
+
 
     @Override
     public void processForServer(ThreadServidor threadServidor) {
@@ -24,12 +26,10 @@ public class SelectPlayerResponseCommand extends Command implements Serializable
 
     @Override
     public void processInClient(Client client) {
-        
-       String[] params = getParameters();
-       String msg = params[0];
-       client.actualizarContrincante(msg);
-    }
-    
-    
-    
+        String[] params = getParameters();
+        if(params[0].contains("null"))
+            client.actualizarRanking("No hay datos suficientes");
+        else
+            client.actualizarRanking(params[0]);
+    }   
 }

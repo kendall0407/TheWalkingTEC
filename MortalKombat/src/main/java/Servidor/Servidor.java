@@ -5,11 +5,13 @@
 package Servidor;
 
 import Models.GiveJokerCommand;
+import Models.NotificarRanking;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.IOException;
 import java.net.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Random;
 
 /**
@@ -114,46 +116,83 @@ public class Servidor {
     //Avanzar al siguiente turno
     public void siguienteTurno() {
         synchronized (turnoLock) {
-            turnoActual++;
-            
-            //revisar primero saltoTurnos
-            while (saltosTurno.contains(turnoActual) || desconectados.contains(turnoActual)) {
-                turnoActual++;
+            int jugadoresConectados = getConections();
+
+            // Si no hay jugadores, terminar
+            if (jugadoresConectados == 0) {
+                partidaFinalizada("Todos los jugadores se desconectaron");
+                return;
             }
-            this.conectados = this.getConnectedClients().size();
-            if (turnoActual >= conectados) {
-                writeMessage("Ronda " + rondaActual + " completada.");
-                if(!saltosTurno.isEmpty())
-                    saltosTurno.clear();    
-                try {
-                    Thread.sleep(2000);
-                } catch (InterruptedException e) {}
-                iniciarNuevaRonda();
-            } else {
+
+            // Encontrar próximo jugador válido
+            int intentos = 0;
+            do {
+                turnoActual = (turnoActual + 1) % jugadoresConectados;
+                intentos++;
+
+                // Prevenir bucle infinito
+                if (intentos > jugadoresConectados * 2) {
+                    writeMessage("Error: No se puede encontrar jugador para turno");
+                    break;
+                }
+
+            } while (saltosTurno.contains(turnoActual) || 
+                     desconectados.contains(turnoActual) ||
+                     !jugadorEstaConectado(turnoActual));
+
+            if (intentos <= jugadoresConectados * 2) {
                 notificarTurno();
             }
         }
+    }
+
+    private boolean jugadorEstaConectado(int idJugador) {
+        for (ThreadServidor ts : connectedClients) {
+            if (ts.getIdJugador() == idJugador) {
+                return true;
+            }
+        }
+        return false;
     }
     
     //elegir objetivo para un jugador
     public int elegirObjetivo(ThreadServidor t) {
         this.conectados = this.getConnectedClients().size();
+
         if (conectados <= 1) {
-            partidaFinalizada("No hay mas jugadores  gano J" + t.getIdJugador());
+            partidaFinalizada("No hay más jugadores. Ganó J" + t.getIdJugador());
             return -1;
         }
-        Random r = new Random();
-        int n = r.nextInt(conectados);
-        if(t.getObjetivos().size() >= this.conectados - 1) {
+
+        // Si ya atacó a todos, limpiar historial
+        if (t.getObjetivos().size() >= this.conectados - 1) {
             t.getObjetivos().clear();
-            siguienteTurno();
-            return -1;
+            writeMessage("J" + t.getIdJugador() + " ha atacado a todos, reiniciando objetivos...");
         }
-        while(n == t.getIdJugador() || t.getObjetivos().contains(n) || objetivosOcupados.contains(n)) {
-            n = r.nextInt(conectados);
+
+        Random r = new Random();
+        int intentos = 0;
+        int maxIntentos = conectados * 3; // Límite de intentos
+
+        while (intentos < maxIntentos) {
+            int n = r.nextInt(conectados);
+
+            // Verificar si es un objetivo válido
+            if (n != t.getIdJugador() && 
+                !t.getObjetivos().contains(n) && 
+                !objetivosOcupados.contains(n)) {
+
+                objetivosOcupados.add(n);
+                t.getObjetivos().add(n);
+                return n;
+            }
+            intentos++;
         }
-        objetivosOcupados.add(n);
-        return n;
+
+        // Si no se encontró objetivo después de muchos intentos
+        writeMessage("No se pudo encontrar objetivo para J" + t.getIdJugador() + ", saltando turno.");
+        t.getObjetivos().clear(); // Limpiar para la próxima vez
+        return -1;
     }
     public void partidaFinalizada(String msg) { //razon de terminarla ya sea por ganar o error por falta de
         //jugadores o incluso o otros
@@ -226,21 +265,55 @@ public class Servidor {
         return desconectados;
     }
 
-    public void setTurnoActual(int turnoActual) {
-        int i = 0;
-        while(this.connectedClients.get(i).getIdJugador() != turnoActual) {
-            i++;
+    public void setTurnoActualExterno(int nuevoTurno) {
+        synchronized (turnoLock) {
+            this.turnoActual = nuevoTurno;
+
+           
+            for (ThreadServidor client : connectedClients) {
+                if (client.getIdJugador() == nuevoTurno) {
+                    client.notificarTurno();
+                    break;
+                }
+            }
         }
-        saltarTurno(this.connectedClients.get(i).getIdJugador());
-        this.turnoActualCopia = turnoActual;
-        this.turnoActual = turnoActual;
     }
+
 
     public UserDatabase getDb() {
         return db;
     }
      
+    public void actualizarRanking() {
+       ArrayList<ThreadServidor> ordenados = new ArrayList<>(connectedClients);
+       Collections.sort(ordenados, (a, b) -> Integer.compare(b.ataquesBuenos, a.ataquesBuenos));
 
+       StringBuilder rankingBuilder = new StringBuilder();
+       rankingBuilder.append("=== RANKING ===\n");
+
+       for (int i = 0; i < ordenados.size(); i++) {
+           ThreadServidor t = ordenados.get(i);
+           rankingBuilder.append(String.format("%d. J%d - %s [Ataques exitosos: %d | Vida: %d]\n", 
+               i + 1, 
+               t.getIdJugador(),
+               t.getUsuario() != null ? t.getUsuario() : "Jugador" + t.getIdJugador(),
+               t.ataquesBuenos,
+               t.getVida()
+           ));
+       }
+
+       String[] params = {rankingBuilder.toString()};
+       NotificarRanking cmd = new NotificarRanking(params);
+
+       for (ThreadServidor client : connectedClients) {
+           try {
+               client.sender.writeObject(cmd);  
+               client.sender.flush();
+           } catch (IOException ex) {
+               System.err.println("Error enviando ranking a J" + client.getIdJugador() + ": " + ex.getMessage());
+           }
+       }
+   }
     
     public static void main(String[] args) {
         Servidor s = new Servidor();

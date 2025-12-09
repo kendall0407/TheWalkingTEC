@@ -8,13 +8,7 @@ import Jugador.Client;
 import Servidor.ThreadServidor;
 import java.io.Serializable;
 
-public class AttackCommand extends Command implements Serializable {
-    
-    int[] parameters = new int[3];
-    int idA;//Atacante
-    int idO;//Objetivo
-    String arma; //
-    
+public class AttackCommand extends Command implements Serializable {  
     
     public AttackCommand(String[] parameters) {
         super(CommandType.ATAQUE, parameters);
@@ -27,7 +21,11 @@ public class AttackCommand extends Command implements Serializable {
         
         ThreadServidor objetivo = threadServidor.getServer().getConnection(idObjetivo);
         objetivo.recibirAtaque(params);
-
+        if(Integer.parseInt(params[params.length-1]) > 100){
+            threadServidor.ataquesBuenos++;
+        } else {
+            threadServidor.ataquesFallidos++;
+        }
     }
     
     @Override

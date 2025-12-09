@@ -32,16 +32,29 @@ public class ThreadServidor extends Thread{
     public boolean noEmpate = false;
     private String usuario;
     private String contrasena;
+    
+    
     private String ultimoTipo;
     
     private int vidaUltimo;
     public int muertes;
     public int rendiciones;
+    public int ataquesBuenos;
+    public int ataquesFallidos;
+    
      // Información del jugador
     private int vida = 100;
     private int ataquesHechos = 0;
     
     public ThreadServidor(Servidor server, Socket socket, int id) {
+        this.muertes = 0;
+        this.rendiciones = 0;
+        this.ataquesBuenos = 0;
+        this.ataquesFallidos = 0;
+        this.vida = 100;
+        this.ataquesHechos = 0;
+        
+        
         this.server = server;
         this.socket = socket;
         this.idJugador = id;
@@ -105,7 +118,7 @@ public class ThreadServidor extends Thread{
                     }
                     continue;
                 }
-
+                
                 if (obj instanceof MsgAllCommand) {
                     ((Command)obj).processForServer(this);
                     continue;
@@ -116,7 +129,7 @@ public class ThreadServidor extends Thread{
                     if(msg.toLowerCase().equals("muerte")){
                         this.muertes++;
                     }
-                }
+                } 
 
                 // Esperar hasta que sea mi turno
                 esperarMiTurno();
@@ -158,6 +171,7 @@ public class ThreadServidor extends Thread{
                 synchronized (turnoLock) {
                     esMiTurno = false;
                 }
+                server.actualizarRanking();
             } catch (IOException ex) {
                 server.writeMessage("Jugador J" + idJugador + " desconectado");
                 server.getDesconectados().add(idJugador);
@@ -190,7 +204,7 @@ public class ThreadServidor extends Thread{
     }
     
     public synchronized void darTurnoA(int idJugador) {
-        server.setTurnoActual(idJugador); 
+        server.setTurnoActualExterno(idJugador); 
         notificarTurno(); // algo como notifyAll() a los hilos
     }
 
@@ -204,9 +218,11 @@ public class ThreadServidor extends Thread{
     
     public void asignarNuevoObjetivo() {
         idObjetivo = server.elegirObjetivo(this);
+        this.setIdObjetivo(idObjetivo);
         String[] params = { 
             Integer.toString(idJugador), 
-            Integer.toString(idObjetivo)
+            Integer.toString(idObjetivo),
+            this.ultimoTipo
         };
         AssignTargetCommand cmd = new AssignTargetCommand(params);
         
@@ -259,17 +275,9 @@ public class ThreadServidor extends Thread{
     }
     
     public void recibirAtaque(String[] params){        
-        // Crear nuevo arreglo con espacio extra
-        String[] nuevosParams = new String[params.length + 1];
-
-        // Copiar los originales
-        System.arraycopy(params, 0, nuevosParams, 0, params.length);
-
-        // Agregar el nuevo parámetro
-        nuevosParams[params.length] = extra;
 
         // Usar el arreglo expandido
-        ReceiveAttackCommand cmd = new ReceiveAttackCommand(nuevosParams);
+        ReceiveAttackCommand cmd = new ReceiveAttackCommand(params);
         try {
             sender.writeObject(cmd);
             sender.flush();
@@ -299,11 +307,13 @@ public class ThreadServidor extends Thread{
     }
     
     public String solicitarInfo(String usuario) {
+        if(server.getDb().getUser(usuario) == null)
+            return "no hay stats aun";
         return server.getDb().getUser(usuario).loadStats();
     }
 
     public String getUsuario() {
-        return usuario;
+        return usuario != null ? usuario : "Jugador" + idJugador;
     }
 
     public void setUsuario(String usuario) {

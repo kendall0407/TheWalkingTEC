@@ -100,6 +100,12 @@ public enum CommandType {
             return new ReceiveJokerCommand(params);
         }
     },
+    NOTIFICAR{
+        @Override
+        public Command create(String[] params) {
+            return new ReceiveJokerCommand(params);
+        }
+    },
     CONSULTAR{
         @Override
         public Command create(String[] params) {

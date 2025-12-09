@@ -18,7 +18,7 @@ import java.util.HashMap;
  * @author kendall-sanabria
  */
 public class UserDataBase {
-    private final File dbFile = new File("users.db");
+    private final File dbFile = new File("users.txt");
     private HashMap<String, User> users = new HashMap<>();
     
     public synchronized void load() {

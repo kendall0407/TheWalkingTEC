@@ -104,6 +104,17 @@ public class ConsoleController {
                 client.getRefFrame().crearLuchadorEquipo(partes[1], "100%",partes[2]);
                 consola.append("\n > Creado exitosamente!");
                 lockedPosition = consola.getDocument().getLength();
+                String[] params = {client.getClientModel().getUsuario(), 
+                client.getClientModel().getUsuario(),
+                client.getClientModel().getUltimoPeleador().getTipoAtaque(),
+                Integer.toString(client.getClientModel().getUltimoPeleador().getVida())};
+                OwnInfoCommand cmd = new OwnInfoCommand(params);
+                try {
+                    client.getSender().writeObject(cmd);
+                    client.getSender().flush();
+                } catch (IOException ex) {
+                    System.getLogger(ConsoleController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
+                }
                 return;
             }   
         
@@ -124,9 +135,20 @@ public class ConsoleController {
                 if(u.getPassword().equals(contrasena)) {
                     sesionIniciada = true;
                     consola.append("\n > Se inicio sesion existosamente! Ahora crea peleadores!");
-                    client.getRefFrame().consultarInstrucciones();
+                    consola.append("Instrucciones de comandos" +
+                        "\n1. 'Ataque-peleador-arma-enemigo(ID)'" +
+                        "\n2. 'Consultar-jugador(ID)'" +
+                        "\n3. 'Recargar'" +
+                        "\n4. 'Comodin'" +
+                        "\n5. 'Pass'" +
+                        "\n6. 'Rendirse'" +
+                        "\n7. 'Draw'" +
+                        "\n8. 'all-msg'" +
+                        "\n9. 'dm-msg-jugador(ID)'\nPor favor crear un personaje" +
+                        "\n10. 'comodin-peleador1-arma1-peleador2-arma2-enemigo(ID)" +
+                        " \n------'crear-nombre-poder-arma1-arma2-arma3-arma4-arma5'---\n > ");
                     lockedPosition = consola.getDocument().getLength();
-                    client.actualizarStatus(u.loadStats());
+                    client.actualizarStatus("No hay stats todavia");
                     client.getClientModel().setStatus(u.getStats());
                     String[] params = {usuario, contrasena, "0" ,"100"};
                     OwnInfoCommand cmd = new OwnInfoCommand(params);
@@ -152,9 +174,20 @@ public class ConsoleController {
                 client.getClientModel().setUser(u);
                 consola.append("\n > Se creo el usuario existosamente! Ahora crea peleadores!");
                 sesionIniciada = true;
-                client.getRefFrame().consultarInstrucciones();
+                consola.append("Instrucciones de comandos" +
+                        "\n1. 'Ataque-peleador-arma-enemigo(ID)'" +
+                        "\n2. 'Consultar-jugador(ID)'" +
+                        "\n3. 'Recargar'" +
+                        "\n4. 'Comodin'" +
+                        "\n5. 'Pass'" +
+                        "\n6. 'Rendirse'" +
+                        "\n7. 'Draw'" +
+                        "\n8. 'all-msg'" +
+                        "\n9. 'dm-msg-jugador(ID)'\nPor favor crear un personaje" +
+                        "\n10. 'comodin-peleador1-arma1-peleador2-arma2-enemigo(ID)" +
+                        " \n------'crear-nombre-poder-arma1-arma2-arma3-arma4-arma5'---\n > ");
                 lockedPosition = consola.getDocument().getLength();
-                client.actualizarStatus(u.loadStats());
+                client.actualizarStatus("No hay stats todavia");
                 client.getClientModel().setStatus(u.getStats());
                 String[] params = {usuario, contrasena, "0" ,"100"};
                 OwnInfoCommand cmd = new OwnInfoCommand(params);
@@ -189,11 +222,33 @@ public class ConsoleController {
             Peleador p = client.getClientModel().getLuchador(partes[1]);
             client.getRefFrame().crearStats(p.getNombre(), Integer.toString(p.getVida()), p.getDanosPorTipo());
             return;
-        }
+        } 
      
         CommandProcessor processor = new CommandProcessor();
         Command commandObj = processor.process(command, this.client.getID());
         
+        if (commandObj == null) {
+            consola.append("\n > [ERROR 103] Comando '" + command + "' no reconocido");
+            lockedPosition = consola.getDocument().getLength();
+            return;
+        }
+
+        // VERIFICAR SI EL COMANDO REQUIERE TURNO
+        boolean requiereTurno = true;
+
+        // Comandos que NO requieren turno
+        if (commandObj instanceof MsgAllCommand || 
+            commandObj instanceof PrivateMsgCommand ||
+            commandObj instanceof SelectPlayerCommand ||
+            commandObj instanceof RechargeGunsCommand) {
+            requiereTurno = false;
+        }
+
+        // Si requiere turno y no es el turno del jugador
+        if (requiereTurno && !turno) {
+            consola.append("\n > [ERROR161] NO ES TU TURNO!"+ "\n > ");
+            return;
+        }
         if (commandObj == null) {
             consola.append("\n > [ERROR 103] Comando '" + command + "' no reconocido");
             lockedPosition = consola.getDocument().getLength();
@@ -212,9 +267,56 @@ public class ConsoleController {
                 consola.append("\n > [ERROR 00] Ya no hay armas por usar, recargalas!"+ "\n > ");
                 return;
             }
+            int dano = 0;
+            switch (client.getClientModel().getAtaqueEnemigo().toLowerCase()) {
+                case "fuego":
+                    dano = danos[0];
+                    break;
+
+                case "aire":
+                    dano = danos[1];
+                    break;
+
+                case "agua":
+                    dano = danos[2];
+                    break;
+
+                case "magia blanca":
+                    dano = danos[3];
+                    break;
+
+                case "magia negra":
+                    dano = danos[4];
+                    break;
+
+                case "electricidad":
+                    dano = danos[5];
+                    break;
+
+                case "hielo":
+                    dano = danos[6];
+                    break;
+
+                case "acid":
+                    dano = danos[7];
+                    break;
+
+                case "espiritualidad":
+                    dano = danos[8];
+                    break;
+
+                case "hierro":
+                    dano = danos[9];
+                    break;
+
+                default:
+                    // ataque no reconocido
+                    break;
+            }
+            dano = luch.getDanoBase()*dano/100;
             
             String danosT = Arrays.toString(danos);
-            commandObj = processor.processAtack(command, danosT, Integer.toString(client.getID()), luch.getTipoAtaque());
+            commandObj = processor.processAtack(command, danosT, Integer.toString(client.getID()), luch.getTipoAtaque(), Integer.toString(dano));
             
             if (commandObj == null) {
                 consola.append("\n > [ERROR] No se pudo procesar el ataque"+ "\n > ");
@@ -225,25 +327,29 @@ public class ConsoleController {
             }
             this.client.getClientModel().setUltimoPeleador(luch); 
             
+            
             this.client.actualizarAtaquesHechos("Atacaste al jugador J" +
                     partes[3] + "con " + luch.getNombre() + "[" + luch.getTipoAtaque() +
-                    "]" + "\nArma: " + partes[2]);
+                    "]" + "\nArma: " + partes[2] + " Dano: " + dano + "%");
             turno = false;
         } else if (commandObj instanceof DrawCommand) {
             if (!turno) {
                 consola.append("\n > [ERROR161] NO ES TU TURNO!"+ "\n > ");
                 return;
             }
+            turno = false;
         } else if (commandObj instanceof GiveupCommand) {
             if (!turno) {
                 consola.append("\n > [ERROR161] NO ES TU TURNO!"+ "\n > ");
                 return;
             }
+            turno = false;
         } else if (commandObj instanceof PassCommand) {
             if (!turno) {
                 consola.append("\n > [ERROR161] NO ES TU TURNO!"+ "\n > ");
                 return;
             }
+            turno = false;
         } else if (commandObj instanceof UseJokerCommand) {
             if (!turno) {
                 consola.append("\n > [ERROR161] NO ES TU TURNO!"+ "\n > ");
@@ -274,7 +380,7 @@ public class ConsoleController {
                     String danosT = Arrays.toString(danos1);
                     String danosT2 = Arrays.toString(danos2);
                     commandObj = processor.processJoker(command, danosT, danosT2, 
-                        Integer.toString(client.getID()), luch1.getTipoAtaque(), luch2.getTipoAtaque());
+                        Integer.toString(client.getID()), luch1.getTipoAtaque(), luch2.getTipoAtaque(), Integer.toString(luch1.getDanoBase()));
 
                     if (commandObj == null) {
                         consola.append("\n > [ERROR] No se pudo procesar el ataque"+ "\n > ");
@@ -297,40 +403,58 @@ public class ConsoleController {
             } else{
                 consola.append("\n > MUCHOS PARAMETROS" + "\n > ");
             }
+            turno = false;
         }
-        try {
-            client.getSender().writeObject(commandObj);
-            client.getSender().flush();
-            commandObj.processInClient(client);
-            consola.append("\n > [OK] Enviado: " + commandObj.getClass().getSimpleName()+ "\n > ");
-            lockedPosition = consola.getDocument().getLength();
-        } catch (IOException e) {
-            consola.append("\n > [ERROR] No se pudo enviar el comando: " + e.getMessage()+ "\n > ");
-            lockedPosition = consola.getDocument().getLength();
-            
-        }
-        
-        String[] params = {client.getClientModel().getUsuario(), 
-                client.getClientModel().getUsuario(),
-                client.getClientModel().getUltimoPeleador().getTipoAtaque(),
-                Integer.toString(client.getClientModel().getUltimoPeleador().getVida())};
-        OwnInfoCommand cmd = new OwnInfoCommand(params);
-        try {
-            client.getSender().writeObject(cmd);
-            client.getSender().flush();
-        } catch (IOException ex) {
-            System.getLogger(ConsoleController.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
-        }
+            try {
+                client.getSender().writeObject(commandObj);
+                client.getSender().flush();
+                commandObj.processInClient(client);
+                consola.append("\n > [OK] Enviado: " + commandObj.getClass().getSimpleName()+ "\n > ");
+                lockedPosition = consola.getDocument().getLength();
+            } catch (IOException e) {
+                consola.append("\n > [ERROR] No se pudo enviar el comando: " + e.getMessage()+ "\n > ");
+                lockedPosition = consola.getDocument().getLength();
+            }
+
+            // VERIFICAR QUE HAY ULTIMO PELEADOR ANTES DE ENVIAR OwnInfoCommand
+            Peleador ultimoPeleador = client.getClientModel().getUltimoPeleador();
+            if (ultimoPeleador != null) {
+                String[] params = {
+                    client.getClientModel().getUsuario(), 
+                    client.getClientModel().getUsuario(),
+                    ultimoPeleador.getTipoAtaque(),
+                    Integer.toString(ultimoPeleador.getVida())
+                };
+                OwnInfoCommand cmd = new OwnInfoCommand(params);
+                try {
+                    client.getSender().writeObject(cmd);
+                    client.getSender().flush();
+                } catch (IOException ex) {
                     
-        try (FileWriter fw = new FileWriter("LOG.txt", true)) { 
-            LocalDateTime fechaHora = LocalDateTime.now();
-            fw.write("[" + fechaHora.toString() + "] Comando '" + commandObj.getClass().getSimpleName() + 
-                    "' con parametros '" + command + "'\n ");//falta resultado
-        } catch (IOException e) {
-            e.printStackTrace();
+                }
+            } else {
+                consola.append("\n > [ADVERTENCIA] No hay peleador activo para enviar info al servidor");
+            }
+
+            try (FileWriter fw = new FileWriter("LOG.txt", true)) { 
+                LocalDateTime fechaHora = LocalDateTime.now();
+                fw.write("[" + fechaHora.toString() + "] Comando '" + 
+                         (commandObj != null ? commandObj.getClass().getSimpleName() : "null") + 
+                         "' con parametros '" + command + "'\n");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            // Solo resetear turno para comandos que lo requieren
+            if (commandObj instanceof AttackCommand ||
+                commandObj instanceof DrawCommand ||
+                commandObj instanceof GiveupCommand ||
+                commandObj instanceof PassCommand ||
+                commandObj instanceof UseJokerCommand) {
+                turno = false;
+
+
         }
-        turno = false;
-        
     }
     
     
@@ -347,10 +471,20 @@ public class ConsoleController {
 
             client.crearLuchador(partes);
             client.getRefFrame().crearLuchadorEquipo(partes[1], "100%",partes[2]);
-
+            try (FileWriter fw = new FileWriter("LOG.txt", true)) { 
+            LocalDateTime fechaHora = LocalDateTime.now();
+            fw.write("[" + fechaHora.toString() + "] Comando '" + cmd.getClass().getSimpleName() + 
+                    "' con parametros '" + cmd + "'\n ");//falta resultado
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
         lockedPosition = consola.getDocument().getLength();
+        
+                    
+
+        turno = false;
     }
 
 }

@@ -48,13 +48,13 @@ public class CommandProcessor {
         return type.create(params);
     }
     
-    public Command processAtack(String line, String danos, String id, String poder) {
+    public Command processAtack(String line, String danos, String id, String poder, String danoBase) {
         
         // 1. Separar por guiones
         String[] params = line.split("-");
         
         // 2. Crear un arreglo más grande para meter los extras
-        String[] finalParams = new String[params.length + 2];
+        String[] finalParams = new String[params.length + 3];
 
         // 3. Copiar los parámetros originales
         for (int i = 0; i < params.length-1; i++) {
@@ -65,17 +65,18 @@ public class CommandProcessor {
         finalParams[params.length-1] = danos;
         finalParams[params.length] = id;
         finalParams[params.length+1] = poder;
+        finalParams[params.length+2] = danoBase;
         
         return new AttackCommand(finalParams);
     }
     
-    public Command processJoker(String line, String danos1, String danos2, String id, String poder1, String poder2) {
+    public Command processJoker(String line, String danos1, String danos2, String id, String poder1, String poder2, String danoBase) {
         
         // 1. Separar por guiones
         String[] params = line.split("-");
         
         // 2. Crear un arreglo más grande para meter los extras
-        String[] finalParams = new String[params.length + 4];
+        String[] finalParams = new String[params.length + 5];
 
         // 3. Copiar los parámetros originales
         for (int i = 0; i < params.length-1; i++) {
@@ -88,6 +89,7 @@ public class CommandProcessor {
         finalParams[params.length+1] = id;
         finalParams[params.length+2] = poder1;
         finalParams[params.length+3] = poder2;
+        finalParams[params.length+4] = danoBase;
 
         return new AttackCommand(finalParams);
     }

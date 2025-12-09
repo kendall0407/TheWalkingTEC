@@ -18,12 +18,15 @@ public class Peleador {
     private String tipoAtaque;
     private HashMap<String, int[]> danosPorTipoCopia;
     private int vida;
-    
+    private int danoBase;
     
     public Peleador(String[] parametros) {
         this.nombre = parametros[1];
         this.tipoAtaque = parametros[2];
         this.vida = 100;
+        
+        Random r = new Random();
+        this.danoBase = r.nextInt(61) + 20; // 61 = (80 - 20) + 1
         for(int i = 3; i <= 7; i++) {  // 7 por cant de parametros
             // Si el tipo de arma no tiene daño generado, se genera
             int[] danoTipos = generarDano();
@@ -101,4 +104,14 @@ public class Peleador {
         
         return vida;
     }
+
+    public int getDanoBase() {
+        return danoBase;
+    }
+
+    public void setDanoBase(int danoBase) {
+        this.danoBase = danoBase;
+    }
+    
+    
 }

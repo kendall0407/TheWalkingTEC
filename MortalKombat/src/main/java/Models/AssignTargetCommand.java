@@ -26,7 +26,7 @@ public class AssignTargetCommand extends Command implements Serializable {
     public void processInClient(Client client) {
         String idCliente = getParameters()[0];
         String idObjetivo = getParameters()[1];
-
+        String tipoAtaque = getParameters()[2];
         
         
         // Mostrar mensaje
@@ -34,6 +34,8 @@ public class AssignTargetCommand extends Command implements Serializable {
         client.actualizarContrincante(mensaje);
         client.actualizarStatus("Eres el jugador: " + idCliente);
         client.setID(Integer.parseInt(idCliente));
+        client.setIdObjetivo(Integer.parseInt(idObjetivo));
+        client.getClientModel().setAtaqueEnemigo(tipoAtaque);
     }
     
     

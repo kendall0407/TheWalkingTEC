@@ -26,11 +26,14 @@ public class ClientModel {
     private String contrasena;
     private UserDataBase ub;
     private User user;
+    private String ataqueEnemigo;
     
     public ClientModel(Client cl) {
+        this.vida = 100;
         ub = new UserDataBase();
         ub.load();
         this.client = cl;
+        this.status = new int[0]; // Inicializar array vacío
     }
 
     public User getUser() {
@@ -82,6 +85,9 @@ public class ClientModel {
     }
 
     public Peleador getUltimoPeleador() {
+        if(ultimoPeleador == null && !peleadores.isEmpty()) {
+            ultimoPeleador = peleadores.get(0);
+        }
         return ultimoPeleador;
     }
 
@@ -95,7 +101,7 @@ public class ClientModel {
         String texto = params[3];
         int atacante = Integer.parseInt(params[4]);
         String tipoAtaque = params[5];
-        
+        String dano1 = params[params.length-1];
         int dano = 0;
         texto = texto.replace("[", "").replace("]", "");
         String[] partes = texto.split(",");
@@ -121,60 +127,70 @@ public class ClientModel {
                 break;
 
             case "magia blanca":
-                dano = numeros[2];
+                dano = numeros[3];
                 break;
 
             case "magia negra":
-                dano = numeros[2];
+                dano = numeros[4];
                 break;
 
             case "electricidad":
-                dano = numeros[2];
+                dano = numeros[5];
                 break;
 
             case "hielo":
-                dano = numeros[2];
+                dano = numeros[6];
                 break;
 
             case "acid":
-                dano = numeros[2];
+                dano = numeros[7];
                 break;
 
             case "espiritualidad":
-                dano = numeros[2];
+                dano = numeros[8];
                 break;
 
             case "hierro":
-                dano = numeros[2];
+                dano = numeros[9];
                 break;
 
             default:
                 // ataque no reconocido
                 break;
         }
+        //dano = luch.getDanoBase()+dano; TODO
         client.actualizarReceivedAttacks("Has sido atacado por J" + atacante + 
                 " con "+peleador + " [" + tipoAtaque  +"] con ARMA -> " + arma+
-                " dano: " + dano + "%");
-        if(ultimoPeleador == null)
-            ultimoPeleador = peleadores.getFirst();
+                " dano: " + dano1 + "%");
+        if(ultimoPeleador == null && !peleadores.isEmpty()) {
+            ultimoPeleador = peleadores.get(0);
+        } else if (peleadores.isEmpty()) {
+            client.disconnect();
+            client.escribirMensajeConsola("No tienes peleadores disponibles, perdiste!");
+            
+            return;
+        }
         int vidaS = this.ultimoPeleador.recibirDano(dano);
         if(vidaS <=0) {
             client.escribirMensajeConsola("Se te murio un peleador :(");
+            vida = vida-35;
+            client.escribirMensajeConsola("Vida total: " + vida);
+            System.out.println("Vida total: " + vida);
             client.enviarMsgServer("muerte");
             client.actualizarLuchadorEquipo(peleadores.indexOf(ultimoPeleador), ultimoPeleador.getNombre(), Integer.toString(vidaS));
             if (!peleadores.isEmpty()){
                 ultimoPeleador = peleadores.getFirst();
                 this.peleadores.remove(ultimoPeleador);
+                return;
             } else {
                 client.enviarMsgServer("J" + client.getID() + " perdio!");
                 client.escribirMensajeConsola("Perdiste!!!");
                 client.disconnect();
-                
+                return;
             }
         }
-        vida -= vidaS * 35 /100; //representacion
+        vida =vida -( vidaS * 35 /100); //representacion
         client.escribirMensajeConsola("Vida total: " + vida);
-        System.out.println("Vida total: " + vida);
     }
     
     public void recibirComodin(String[] params) {
@@ -254,6 +270,7 @@ public class ClientModel {
                 // ataque no reconocido
                 break;
         }
+        
         client.actualizarReceivedAttacks("Has sido atacado por J" + atacante + 
                 " con "+peleador1 + " [" + tipoAtaque1  +"] con ARMA -> " + arma1+
                 " dano: " + dano1 + "%" + "uso comodin, asi que ataco tambien con:\n" +
@@ -325,6 +342,14 @@ public class ClientModel {
 
     public void setRanking(HashMap<String, Integer> ranking) {
         this.ranking = ranking;
+    }
+
+    public String getAtaqueEnemigo() {
+        return ataqueEnemigo;
+    }
+
+    public void setAtaqueEnemigo(String ataqueEnemigo) {
+        this.ataqueEnemigo = ataqueEnemigo;
     }
     
     

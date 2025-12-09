@@ -48,9 +48,19 @@ public class FrameClient extends JFrame {
         txaRanking.setWrapStyleWord(true);  // Evita cortar palabras a la mitad
         txaRanking.setEditable(false);
         txaRanking.setFont(new Font("Segoe UI", Font.PLAIN, 16));
-        pnlRanking.add(txaRanking);
-        
-        
+
+        // Crear JScrollPane para el ranking
+        JScrollPane scrollRanking = new JScrollPane(txaRanking);
+        scrollRanking.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        scrollRanking.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollRanking.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+
+        // Configurar tamaño preferido para el scroll
+        scrollRanking.setPreferredSize(new Dimension(200, 150));
+
+        pnlRanking.add(scrollRanking);
+
+
         JPanel pnlContrincante = crearPanel("CONTRINCANTE: ", Color.GREEN.darker());
         txaContrincante = new JTextArea();
         txaContrincante.setBackground(Color.GRAY);
@@ -58,8 +68,17 @@ public class FrameClient extends JFrame {
         txaContrincante.setWrapStyleWord(true);  // Evita cortar palabras a la mitad
         txaContrincante.setEditable(false);
         txaContrincante.setFont(new Font("Segoe UI", Font.PLAIN, 16));
-        pnlContrincante.add(txaContrincante);
-        
+
+        // Crear JScrollPane para el contrincante
+        JScrollPane scrollContrincante = new JScrollPane(txaContrincante);
+        scrollContrincante.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        scrollContrincante.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollContrincante.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        scrollContrincante.setPreferredSize(new Dimension(200, 150));
+
+        pnlContrincante.add(scrollContrincante);
+
+
         JPanel pnlStatus = crearPanel("ESTADISTICAS", Color.GREEN.darker());
         txaStatus = new JTextArea();
         txaStatus.setBackground(Color.GRAY);
@@ -67,7 +86,15 @@ public class FrameClient extends JFrame {
         txaStatus.setWrapStyleWord(true);  // Evita cortar palabras a la mitad
         txaStatus.setEditable(false);
         txaStatus.setFont(new Font("Segoe UI", Font.PLAIN, 16));
-        pnlStatus.add(txaStatus);
+
+        // Crear JScrollPane para estadísticas
+        JScrollPane scrollStatus = new JScrollPane(txaStatus);
+        scrollStatus.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        scrollStatus.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollStatus.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        scrollStatus.setPreferredSize(new Dimension(200, 150));
+
+        pnlStatus.add(scrollStatus);
         
         leftPanel.add(pnlRanking);
         leftPanel.add(pnlContrincante);
@@ -310,19 +337,6 @@ public class FrameClient extends JFrame {
         return rightPanel;
     }
     
-    public void consultarInstrucciones() {
-        consola.setText("Instrucciones de comandos" +
-                        "\n1. 'Ataque-peleador-arma-enemigo(ID)'" +
-                        "\n2. 'Consultar-jugador(ID)'" +
-                        "\n3. 'Recargar'" +
-                        "\n4. 'Comodin'" +
-                        "\n5. 'Pass'" +
-                        "\n6. 'Rendirse'" +
-                        "\n7. 'Draw'" +
-                        "\n8. 'all-msg'" +
-                        "\n9. 'dm-msg-jugador(ID)'\nPor favor crear un personaje" +
-                        "\n10. 'comodin-peleador1-arma1-peleador2-arma2-enemigo(ID)" +
-                        " \n------'crear-nombre-poder-arma1-arma2-arma3-arma4-arma5'---\n > ");
-    }
+
 
 }
