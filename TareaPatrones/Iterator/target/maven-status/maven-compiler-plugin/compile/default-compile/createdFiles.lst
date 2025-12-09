@@ -1,0 +1,10 @@
+com/mycompany/iterator/IIterator.class
+com/mycompany/iterator/BinaryTree$TreeIterator.class
+com/mycompany/iterator/IteratorMain.class
+com/mycompany/iterator/BinaryTree.class
+com/mycompany/iterator/Matriz.class
+com/mycompany/iterator/IContainer.class
+com/mycompany/iterator/StaticArray$StaticArrayIterator.class
+com/mycompany/iterator/StaticArray.class
+com/mycompany/iterator/Matriz$MatrizIterator.class
+com/mycompany/iterator/BinaryTree$Node.class
