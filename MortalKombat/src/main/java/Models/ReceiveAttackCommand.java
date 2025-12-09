@@ -26,14 +26,7 @@ public class ReceiveAttackCommand extends Command implements Serializable {
     @Override
     public void processInClient(Client client) {
         String[] params = getParameters();
-        int atacante = Integer.parseInt(params[0]);
-        String arma = params[1];
-        int dano = Integer.parseInt(params[2]);
-        String peleador = params[3];
-        
-        client.actualizarReceivedAttacks("Has sido atacado por J" + atacante + 
-                " con "+peleador +" ARMA -> " + arma);
-        //client.recibirDano(x,y,atacante,tipoAtaque);
+        client.getClientModel().recibirDano(params);
     }
     
 }

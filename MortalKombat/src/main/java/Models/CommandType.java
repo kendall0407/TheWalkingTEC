@@ -76,6 +76,18 @@ public enum CommandType {
             return new UseJokerCommand(params);
         }
     },
+    COMODINENVIAR{
+        @Override
+        public Command create(String[] params) {
+            return new GiveJokerCommand(params);
+        }
+    },
+    RECEIVECOMODIN{
+        @Override
+        public Command create(String[] params) {
+            return new ReceiveJokerCommand(params);
+        }
+    },
     CONSULTAR{
         @Override
         public Command create(String[] params) {

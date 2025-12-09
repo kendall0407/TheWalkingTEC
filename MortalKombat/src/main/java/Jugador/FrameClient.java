@@ -127,15 +127,16 @@ public class FrameClient extends JFrame {
                         "\t\t\t\t\t\t\t\t   ┗━━━━━━━━━━━━━━━━━━━━━━━━━┛\n" +
                         "Instrucciones de comandos" +
                         "\n1. 'Ataque-peleador-arma-enemigo(ID)'" +
-                        "\n2. 'Consultar-luchador'" +
+                        "\n2. 'Consultar-jugador(ID)'" +
                         "\n3. 'Recargar'" +
                         "\n4. 'Comodin'" +
                         "\n5. 'Pass'" +
                         "\n6. 'Rendirse'" +
                         "\n7. 'Draw'" +
                         "\n8. 'all-msg'" +
-                        "\n9. 'dm-msg-jugador(ID)'\nPor favor crear un personaje"
-                        + "'crear-nombre-poder-arma1-arma2-arma3-arma4-arma5'\n > ");
+                        "\n9. 'dm-msg-jugador(ID)'\nPor favor crear un personaje" +
+                        "\n10. 'comodin-peleador1-arma1-peleador2-arma2-enemigo(ID)" +
+                        " ------'crear-nombre-poder-arma1-arma2-arma3-arma4-arma5'---\n > ");
 
         
         JScrollPane scrollPane = new JScrollPane(consola);
@@ -195,7 +196,7 @@ public class FrameClient extends JFrame {
         statsPanel.setLayout(new BoxLayout(statsPanel, BoxLayout.Y_AXIS));
         statsPanel.setBackground(Color.GRAY);
 
-        JLabel title = new JLabel(nombre + "   " + porcentaje);
+        JLabel title = new JLabel(nombre + "   " + porcentaje + "%");
         title.setFont(new Font("Arial", Font.BOLD, 22));
         statsPanel.add(title);
 

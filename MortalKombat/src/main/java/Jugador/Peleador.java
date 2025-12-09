@@ -17,10 +17,13 @@ public class Peleador {
     private String nombre;
     private String tipoAtaque;
     private HashMap<String, int[]> danosPorTipoCopia;
+    private int vida;
+    
+    
     public Peleador(String[] parametros) {
         this.nombre = parametros[1];
         this.tipoAtaque = parametros[2];
-        
+        this.vida = 100;
         for(int i = 3; i <= 7; i++) {  // 7 por cant de parametros
             // Si el tipo de arma no tiene daño generado, se genera
             int[] danoTipos = generarDano();
@@ -37,6 +40,10 @@ public class Peleador {
         }
     }
 
+    public String getTipoAtaque() {
+        return tipoAtaque;
+    }
+    
     public String getNombre() {
         return nombre;
     }
@@ -65,6 +72,10 @@ public class Peleador {
     }
     
     public void recargarArmas() {
+        if(!danosPorTipo.isEmpty()) {
+            System.out.println("Error, no se puede recargar porque aun hay armas");
+            return;
+        }
         danosPorTipo = new HashMap<>();
 
         for (String key : danosPorTipoCopia.keySet()) {
@@ -73,5 +84,21 @@ public class Peleador {
 
             danosPorTipo.put(key, copia);
         }
+    }
+
+    public HashMap<String, int[]> getDanosPorTipo() {
+        return danosPorTipo;
+    }
+
+    public int getVida() {
+        return vida;
+    }
+    
+    public int recibirDano(int dano) {
+        this.vida -= dano;
+        if (vida <= 0) 
+            danosPorTipo.clear();
+        
+        return vida;
     }
 }

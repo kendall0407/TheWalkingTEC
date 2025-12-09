@@ -11,6 +11,7 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import Models.*;
 import java.util.ArrayList;
+import java.util.Random;
 /**
  *
  * @author josed
@@ -69,6 +70,25 @@ public class ThreadServidor extends Thread{
                             
                             server.writeMessage("Juego iniciado");
                             server.writeMessage("Sala llena, comenzando partida...");
+                            int random = new Random().nextInt(server.getConections());
+                            Thread timer = new Thread(() -> {
+                                try {
+                                    Thread.sleep(5 * 60 * 1000); // 5 minutos
+                                    System.out.println("⏳ Tiempo finalizado, un comodin saldra aleatoriamente!");
+
+                                    String[] params = {"1"};
+                                    GiveJokerCommand cmd = new GiveJokerCommand(params);
+                                    try {
+                                        server.getConnectedClients().get(random).getSender().writeObject(cmd);
+                                        server.getConnectedClients().get(random).getSender().flush();
+                                    } catch (IOException ex) {
+                                        server.writeMessage("Error recibiendo ataque");
+                                    } 
+                                } catch (InterruptedException e) {
+                                    System.out.println("Timer detenido");
+                                }
+                            });
+                            timer.start();
                             try {
                                 Thread.sleep(2000);
                             } catch (InterruptedException ex) {
@@ -105,8 +125,16 @@ public class ThreadServidor extends Thread{
                     
                     // Procesar el comando
                     cmd.processForServer(this);
-                    if(noEmpate) { //verificar empate 
+                    if (noEmpate) {
                         noEmpate = false;
+
+                        // Darle turno al otro jugador sin avanzar ronda
+                        darTurnoA(idObjetivo);
+
+                        // Bloquear este hilo hasta que el servidor lo vuelva a activar
+                        esperarMiTurno();
+
+                        // Cuando vuelva a ser mi turno, simplemente continuar
                         continue;
                     }
                     // Avanzar al siguiente turno
@@ -150,6 +178,12 @@ public class ThreadServidor extends Thread{
             }
         }
     }
+    
+    public synchronized void darTurnoA(int idJugador) {
+        server.setTurnoActual(idJugador); 
+        notificarTurno(); // algo como notifyAll() a los hilos
+    }
+
     
     public void notificarTurno() {
         synchronized (turnoLock) {
@@ -225,13 +259,6 @@ public class ThreadServidor extends Thread{
         } 
     }
     
-    public void recibirDano(int dano) {
-        this.vida -= dano;
-        if (vida <=0) {
-           server.getConnectedClients().remove(this.getIdJugador());
-            this.stopThread();
-        }
-    }
     
     public ArrayList<Integer> getObjetivos() {
         return objetivos;
@@ -239,8 +266,16 @@ public class ThreadServidor extends Thread{
     
     public void pasarTurno() {
         //this. empates++
-        server.saltarTurno(this);
+        server.saltarTurno(this.idJugador);
     }
     
-    
+    public void recibirJoker(String[] params) {
+        ReceiveJokerCommand cmd = new ReceiveJokerCommand(params);
+        try {
+            sender.writeObject(cmd);
+            sender.flush();
+        } catch (IOException ex) {
+            server.writeMessage("Error recibiendo ataque");
+        } 
+    }
 }

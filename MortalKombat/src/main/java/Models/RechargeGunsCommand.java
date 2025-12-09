@@ -25,7 +25,9 @@ public class RechargeGunsCommand extends Command implements Serializable{
 
     @Override
     public void processInClient(Client client) {
-        
+        for (int i =0; i < client.getClientModel().getPeleadores().size(); i++){
+            client.getClientModel().getPeleadores().get(i).recargarArmas();
+        }
     }
     
 }

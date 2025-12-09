@@ -23,12 +23,8 @@ public class AttackCommand extends Command implements Serializable {
     @Override
     public void processForServer(ThreadServidor threadServidor) {
         String[] params = getParameters();
-        int idAtacante = Integer.parseInt(params[0]);
-        String arma = params[1];
         int idObjetivo = Integer.parseInt(params[2]);
-        int dano = Integer.parseInt(params[3]);
-        String peleador = params[4];
-
+        
         ThreadServidor objetivo = threadServidor.getServer().getConnection(idObjetivo);
         objetivo.recibirAtaque(params);
 

@@ -83,6 +83,9 @@ public class Client {
         if (consola == null)
             consola = new ConsoleController(this);
         
+        if(msg.contains("Turno de J")) {
+            
+        }
         this.consola.escribirConsola(msg);
     }
     
@@ -97,6 +100,7 @@ public class Client {
     
     public void actualizarReceivedAttacks(String msg) {
         this.getRefFrame().getTxaReceivedAttacks().append(msg + "\n");
+        //clientModel.getUltimoPeleador()
     }
     
     public void actualizarStatus(String msg) {
@@ -135,9 +139,6 @@ public class Client {
         return clientModel;
     }
     
-    public void reicbirDano(int dano) {
-        this.clientModel.recibirDano(dano);
-    }
     public int crearLuchador(String[] parametros) {
         if (parametros == null || parametros.length != 8) {
             this.consola.escribirConsola("\n > [ERROR13]: Se requieren exactamente 8 parámetros.");
@@ -184,13 +185,17 @@ public class Client {
         JLabel lblNombre = (JLabel) card.getClientProperty("lblNombre");
         JLabel lblPorcentaje = (JLabel) card.getClientProperty("lblPorcentaje");
 
-        if (lblNombre != null) lblNombre.setText(nombre);
-        if (lblPorcentaje != null) lblPorcentaje.setText(porcentaje);
+        if (lblNombre != null) 
+            lblNombre.setText(nombre);
+        if (lblPorcentaje != null) 
+            lblPorcentaje.setText(porcentaje);
 
         // Refrescar interfaz
         teamRow.revalidate();
         teamRow.repaint();
     }
+    
+    
     
     public static void main(String[] args) {
         Client cl = new Client();

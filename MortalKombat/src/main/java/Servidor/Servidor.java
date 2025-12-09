@@ -4,6 +4,7 @@
  */
 package Servidor;
 
+import Models.GiveJokerCommand;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.IOException;
@@ -25,18 +26,21 @@ public class Servidor {
     private ThreadConnections connectionsThread;
     private int maxConnections = 0;
     public ArrayList<Integer> objetivosOcupados = new ArrayList<>();
-    public ArrayList<ThreadServidor> saltosTurno = new ArrayList<>();
+    public ArrayList<Integer> saltosTurno = new ArrayList<>();
     private UserDatabase db;
     private ArrayList<Integer> desconectados = new ArrayList<>();
     
     // Sistema de turnos y rondas
     private int turnoActual = 0;  
+    private int turnoActualCopia;
     private int rondaActual = 0;
     public final Object turnoLock = new Object();
     public boolean gameStarted = false;
     
     public Servidor() {
         connectedClients = new ArrayList<>();
+        
+
     }
     
     public void conectarServidor(){
@@ -216,16 +220,28 @@ public class Servidor {
         }
     }
     
-    public void saltarTurno(ThreadServidor t) {
+    public void saltarTurno(int t) {
         saltosTurno.add(t);
     }
 
     public ArrayList<Integer> getDesconectados() {
         return desconectados;
     }
+
+    public void setTurnoActual(int turnoActual) {
+        int i = 0;
+        while(this.connectedClients.get(i).getIdJugador() != turnoActual) {
+            i++;
+        }
+        saltarTurno(this.connectedClients.get(i).getIdJugador());
+        this.turnoActualCopia = turnoActual;
+        this.turnoActual = turnoActual;
+    }
+     
     
     public static void main(String[] args) {
         Servidor s = new Servidor();
         s.conectarServidor();
+        
     }
 }

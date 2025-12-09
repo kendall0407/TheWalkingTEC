@@ -12,24 +12,21 @@ import java.io.Serializable;
  *
  * @author kendall-sanabria
  */
-public class UseJokerCommand extends Command implements Serializable{
-
-    public UseJokerCommand(String[] parameters) {
-        super(CommandType.COMODIN, parameters);
+public class ReceiveJokerCommand extends Command implements Serializable {
+    
+    public ReceiveJokerCommand(String[] parameters) {
+        super(CommandType.RECEIVECOMODIN, parameters);
     }
 
     @Override
     public void processForServer(ThreadServidor threadServidor) {
-        String[] params = getParameters();
-        int idObjetivo = Integer.parseInt(params[4]);
-        
-        ThreadServidor objetivo = threadServidor.getServer().getConnection(idObjetivo);
-        objetivo.recibirJoker(params);
+       
     }
 
     @Override
     public void processInClient(Client client) {
-        
+        String[] params = getParameters();
+        client.getClientModel().recibirComodin(params);
     }
     
 }
